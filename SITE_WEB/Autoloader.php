@@ -10,7 +10,6 @@ class Autoloader
 
     public static function autoload($className)
     {
-        var_dump($className);
 
         $className = str_replace('App\\', '', $className);
         $className = str_replace('\\', DIRECTORY_SEPARATOR, $className);

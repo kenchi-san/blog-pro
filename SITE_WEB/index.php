@@ -1,5 +1,7 @@
 <?php
 use App\Classes\Router;
+session_start();
+
 include_once('Autoloader.php');
 
 Autoloader::run();
