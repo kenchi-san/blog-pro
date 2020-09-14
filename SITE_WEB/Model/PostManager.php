@@ -7,7 +7,7 @@ namespace App\Model;
 use Model\Entities\PostEntity;
 use PDO;
 
-class FrontManager
+class PostManager
 {
     private $bdd;
 

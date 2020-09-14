@@ -1,28 +1,44 @@
-
 <div class="container contact-form">
 <!--    <div class="contact-image">-->
 <!--        <img src="https://image.ibb.co/kUagtU/rocket_contact.png" alt="rocket_contact"/>-->
 <!--    </div>-->
+
+
+            <?php
+            if (isset($errors)) {
+                foreach ($errors as $error) {
+
+                    echo
+                    '<div class="alert alert-danger" role="alert" style="margin-left: 30%;
+    margin-right: 30%;text-align: center; margin-top: 2%">' . $error . '</div>'
+                       ;
+                }
+            }
+            ;?>
+
+
+
     <form method="post">
+
         <h3>Me contacter</h3>
         <div class="row">
             <div class="col-md-6">
                 <div class="form-group">
-                    <input type="text" name="txtName" class="form-control" placeholder="Nom complet*" value="" />
+                    <input type="text" name="name" class="form-control" placeholder="Nom complet*" value="" />
                 </div>
                 <div class="form-group">
-                    <input type="text" name="txtEmail" class="form-control" placeholder="Email *" value="" />
+                    <input type="text" name="email" class="form-control" placeholder="Email *" value="" />
                 </div>
                 <div class="form-group">
-                    <input type="text" name="txtPhone" class="form-control" placeholder="Numéro de téléphone *" value="" />
+                    <input type="text" name="phone" class="form-control" placeholder="Numéro de téléphone *" value="" />
                 </div>
                 <div class="form-group">
-                    <input type="submit" name="btnSubmit" class="btnContact btn-primary" value="Envoyer" />
+                    <input type="submit" name="btnSubmit" class="btnContact btn-primary" placeholder="Envoyer" />
                 </div>
             </div>
             <div class="col-md-6">
                 <div class="form-group">
-                    <textarea name="txtMsg" class="form-control" placeholder="Votre message *" style="width: 100%; height: 150px;"></textarea>
+                    <textarea name="message" class="form-control" placeholder="Votre message *" style="width: 100%; height: 150px;"></textarea>
                 </div>
             </div>
         </div>

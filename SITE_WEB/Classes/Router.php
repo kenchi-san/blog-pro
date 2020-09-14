@@ -17,8 +17,8 @@ class Router
         'contact.html' => ['class' => HomeController::class, 'method' => 'showContact'],
         'blogPage.html' => ['class' => HomeController::class, 'method' => 'showBlog'],
         'loginPage.html' => ['class' => HomeController::class, 'method' => 'login'],
-        'destroySessionPage.html' => ['class' => HomeController::class, 'method' => 'destroySession'],
-        'backOffice.html' => ['class' => BackController::class, 'method' => 'dashboard']
+        'destroySessionPage.html' => ['class' => HomeController::class, 'method' => 'destroySession']
+//        'backOffice.html' => ['class' => BackController::class, 'method' => 'dashboard']
 
 
     ];
@@ -36,7 +36,6 @@ class Router
 
     public function renderController()
     {
-        var_dump($this->request);
         if (key_exists($this->request, $this->route)) {
             $classes = $this->route[$this->request]['class'];
             $method = $this->route[$this->request]['method'];

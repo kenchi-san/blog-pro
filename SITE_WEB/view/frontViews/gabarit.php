@@ -39,8 +39,8 @@
                         mon CV</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="<?php echo HOST . 'backOffice.html'; ?>" download="">back office
-                        mon CV</a>
+                    <a class="nav-link" href="<?php echo HOST . 'backOffice.html'; ?>" >back office
+                        </a>
                 </li>
 
 <?php

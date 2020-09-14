@@ -13,7 +13,14 @@ class View
 
     public function renderView($params = null)
     {
+
+        $params = ['cle' => 2, 'cle2' => 3];
+        extract($params);
+        $cle = $params['cle'];
+        $cle2 = $params['cle2'];
+
         if (empty($params)){
+
             $template = $this->template;
             ob_start();
             include_once(VIEW . $template . '.php');

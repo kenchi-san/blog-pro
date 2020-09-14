@@ -4,9 +4,11 @@ namespace App\Controller;
 
 
 use App\Classes\Router;
+use App\Classes\Session;
 use App\Classes\View;
-use App\Model\FrontManager;
-use Model\SecurityManager;
+use App\Model\PostManager;
+use App\Model\MailManager;
+use Model\UserManager;
 
 class HomeController
 {
@@ -22,13 +24,42 @@ class HomeController
 
     public function showContact()
     {
+
         $contactView = new View('contactPage');
+
+
+            if ($_POST != null) {
+                $errors = [];
+                if (!isset($_POST['name']) || empty($_POST['name'])) {
+                    $errors[] = 'Veuillez indiquer un nom';
+                }
+                if (!isset($_POST['email']) || empty($_POST['email'])) {
+                    $errors[] = 'veuillez indiquer un mail';
+                }
+                if (!isset($_POST['phone']) || empty($_POST['phone'])) {
+                    $errors[] = 'veuillez indiquer un numéro de téléphone';
+                }
+                if (!isset($_POST['message']) || empty($_POST['message'])) {
+                    $errors[] = 'Votre message ne contient rien';
+                }
+
+                if (count($errors)) {
+                    $contactView->renderView(array('errors' => $errors));
+
+                }
+
+            }
         $contactView->renderView();
-    }
+        }
+//    }
+//            $mail = new MailManager();
+//            $mail->sendMail();
+//    }
+
 
     public function showBlog()
     {
-        $manager = new FrontManager();
+        $manager = new PostManager();
         $posts = $manager->findAll();
         $blogView = new View('blogPage');
         $blogView->renderView(array('posts' => $posts));
@@ -36,39 +67,39 @@ class HomeController
 
     public function login()
     {
+        $loginView = new View('loginPage');
 
+        if ($_POST != null) {
 
-        if ($_POST!=null) {
 
             $errors = [];
 
-            if (!isset($_POST['login'])) {
-                $errors[] = 'votre login n\'est pas valide';
-            }
             if (empty($_POST['login'])) {
                 $errors[] = 'Login non renseigné';
             }
-            if (!isset($_POST['password'])) {
-                $errors[] = 'votre mot de passe n\'est pas valide';
-            }
+
             if (empty($_POST['password'])) {
                 $errors[] = 'Mot de passe non renseigné';
             }
             if (count($errors)) {
-                $loginView = new View('loginPage');
-                $loginView->renderView(array('errors' => $errors));
-
-                // TODO if user not null rediriger page d'accueil
+                $loginView->renderView(['errors' => $errors]);
             }
-            $conection = new SecurityManager();
-            $conection->findUser($_POST['login'], $_POST['password']);
-            Router::redirectToRoute();
-        }
-        $loginView = new View('loginPage');
-        $loginView->renderView();
 
+            $conection = new UserManager();
+            $user = $conection->findUserFormCredentials($_POST['login'], $_POST['password']);
+            if($user){
+                $session = new Session();
+                $session->authenticateUser($user);
+                Router::redirectToRoute();
+            }
+
+        }
+        $loginView->renderView();
     }
 
+    public function newPassWord(){
+        $newPassView = new View();
+    }
     static function destroySession()
     {
         session_destroy();
