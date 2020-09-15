@@ -28,36 +28,33 @@ class HomeController
         $contactView = new View('contactPage');
 
 
-            if ($_POST != null) {
-                $errors = [];
-                if (!isset($_POST['name']) || empty($_POST['name'])) {
-                    $errors[] = 'Veuillez indiquer un nom';
-                }
-                if (!isset($_POST['email']) || empty($_POST['email'])) {
-                    $errors[] = 'veuillez indiquer un mail';
-                }
-                if (!isset($_POST['phone']) || empty($_POST['phone'])) {
-                    $errors[] = 'veuillez indiquer un numéro de téléphone';
-                }
-                if (!isset($_POST['message']) || empty($_POST['message'])) {
-                    $errors[] = 'Votre message ne contient rien';
-                }
+        if ($_POST != null) {
+            $errors = [];
+            if (!isset($_POST['name']) || empty($_POST['name'])) {
+                $errors[] = 'Veuillez indiquer un nom';
+            }
+            if (!isset($_POST['email']) || empty($_POST['email'])) {
+                $errors[] = 'veuillez indiquer un mail';
+            }
+            if (!isset($_POST['phone']) || empty($_POST['phone'])) {
+                $errors[] = 'veuillez indiquer un numéro de téléphone';
+            }
+            if (!isset($_POST['message']) || empty($_POST['message'])) {
+                $errors[] = 'Votre message ne contient rien';
+            }
 
-                if (count($errors)) {
-                    $contactView->renderView(array('errors' => $errors));
-
-                }
+            if (count($errors)) {
+                $contactView->renderView(array('errors' => $errors));
 
             }
-        $contactView->renderView();
+
         }
-//    }
-//            $mail = new MailManager();
-//            $mail->sendMail();
-//    }
+        $contactView->renderView();
+    }
 
 
-    public function showBlog()
+    public
+    function showBlog()
     {
         $manager = new PostManager();
         $posts = $manager->findAll();
@@ -87,7 +84,7 @@ class HomeController
 
             $conection = new UserManager();
             $user = $conection->findUserFormCredentials($_POST['login'], $_POST['password']);
-            if($user){
+            if ($user) {
                 $session = new Session();
                 $session->authenticateUser($user);
                 Router::redirectToRoute();

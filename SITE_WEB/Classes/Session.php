@@ -4,8 +4,6 @@
 namespace App\Classes;
 
 
-use Model\Entities\UserEntity;
-
 class Session
 {
 
