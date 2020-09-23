@@ -31,8 +31,8 @@
 
         </aside>
         <section class="col-md-9 col-lg-9" >
-            <?php if (isset($_SESSION['auth'])) {
-                var_dump($_SESSION['auth']);
+            <?php if ($user = $session->isUserAuthenticated()) {
+                var_dump($user);
             }else{
                 echo 'persone de co';
             }

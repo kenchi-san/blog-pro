@@ -6,6 +6,7 @@ namespace Model\Entities;
 
 class UserEntity
 {
+
     private $id;
     private $username;
     private $name;

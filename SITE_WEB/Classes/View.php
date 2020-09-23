@@ -11,9 +11,12 @@ class View
         $this->template = $template;
     }
 
+    /**
+     * @param null $params
+     */
     public function renderView($params = null)
     {
-
+        $session = new Session();
 
         if (empty($params)){
 

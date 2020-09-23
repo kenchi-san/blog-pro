@@ -7,9 +7,10 @@ include_once('Autoloader.php');
 Autoloader::run();
 Config::initGlobals();
 
-
+//
 $request = $_GET['action'] ?? 'homePage.html' ;
-$router = new Router($request);
+$slug = $_GET['token'] ?? null;
+$router = new Router($request, $slug);
 $router->renderController();
 
 

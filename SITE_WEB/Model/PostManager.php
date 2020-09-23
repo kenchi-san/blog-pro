@@ -9,7 +9,7 @@ use PDO;
 
 class PostManager
 {
-    private $bdd;
+    private PDO $bdd;
 
     /**
      * frontManager constructor.

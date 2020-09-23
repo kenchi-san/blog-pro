@@ -4,18 +4,13 @@
 namespace Model;
 
 
-use App\Classes\Router;
-use Model\Entities\UserEntity;
 use PDO;
 
 class UserManager
 {
-    private $bdd;
 
     /**
      * SecurityManager constructor.
-     * @param $login
-     * @param $password
      */
     public function __construct()
     {
@@ -23,18 +18,24 @@ class UserManager
     }
 
 
-    public function findUserFormCredentials($login, $password)
+    /**
+     * @param string $login
+     * @param string $password
+     * @return false|mixed
+     */
+    public function findUserFormCredentials(string $login, string $password)
     {
         if ($login) {
 
-            $query = "SELECT * FROM user WHERE username = :username ";
+            $query = "SELECT * FROM user
+INNER JOIN user_status us on user.user_status_id = us.id
+WHERE username = :username";
             $req = $this->bdd->prepare($query);
             $req->execute(array('username' => $login));
             $result = $req->fetch(PDO::FETCH_ASSOC);
             $req->closeCursor();
 
             if ($result['username'] === $login) {
-
                 if (password_verify($password, $result['password'])) {
                     return $result;
                 }
@@ -42,14 +43,19 @@ class UserManager
             return false;
         }
 
-        // TODO creer methode UpdatePassword($login, $password)
-//        if (isset($params['login']) && empty($params['password'])) {
-//            $query ="UPDATE user SET password = :password WHERE username = :username";
-//            $req = $bdd->prepare($query);
-//            $req->execute(array(
-//                'password' => $params['password']
-//            ));
-//        }
-        var_dump('nouveau mot de passe');
     }
+public function setupNewPasswordInBdd($password){
+    if ($password) {
+        var_dump($password);die();
+        $req = $this->bdd->prepare('UPDATE user SET password = :nvpwd WHERE username = :login');
+        $result = $req->execute($user);
+        $user = new Entities\UserEntity();
+        $user->setPassword($password);
+        $user->getUsername($login);
+        var_dump($result);
+        return $result;
+    }
+    return false;
+}
+
 }
