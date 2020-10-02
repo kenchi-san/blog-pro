@@ -12,9 +12,9 @@ class Session
     const AUTH_KEY = 'auth';
 
     /**
-     * @param string $user
+     * @param  $user
      */
-    public function authenticateUser(string $user)
+    public function authenticateUser($user)
     {
         $_SESSION[self::AUTH_KEY] = $user;
     }

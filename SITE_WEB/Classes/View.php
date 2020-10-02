@@ -34,6 +34,8 @@ class View
             include_once(VIEW . 'gabarit.php');
         }
 
+        return true;
+
     }
 
 }

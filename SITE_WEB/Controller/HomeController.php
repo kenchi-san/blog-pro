@@ -9,7 +9,6 @@ use App\Classes\Router;
 use App\Classes\Session;
 use App\Classes\TokenGenerator;
 use App\Classes\View;
-use App\Model\MailManager;
 use App\Model\PostManager;
 use Model\UserManager;
 
@@ -104,7 +103,7 @@ class HomeController
     {
         $newPassView = new View('forgetPasswordPage');
         $token = new TokenGenerator();
-        $mailManager = new MailManager();
+        $userManager = new UserManager();
 
         $errors = [];
         $subject = '';
@@ -120,11 +119,11 @@ class HomeController
             }
 
 
-            $mail = $mailManager->checkMail($_POST['email']);
+            $mail = $userManager->checkMail($_POST['email']);
 
             if ($mail) {
                 $newToken = $token->newToken();
-                $mailManager->generateTokenInTheBdd($mail, $newToken);
+                $userManager->generateTokenInTheBdd($mail, $newToken);
 
                 $mailer = new Mailing();
                 $mailer->sendNewPasswordByMail($mail, $subject, $newToken);
@@ -139,34 +138,40 @@ class HomeController
     }
 
     /**
-     * @param $slug string
      * take the request from the link's send by users
      * check if the token exist and setup the new password in the SGBD
+     *
      */
-    public function newPassWord(string $slug)
+    public function newPassWord()
     {
 
+        $view = new View('updatePasswordPage');
+        $slug = $_GET['token'] ?? null;
 
-        $checkUser = new MailManager();
-        $newPassWord = new View('updatePasswordPage');
-        $loginPage = new View('loginPage');
+
+        $userManager = new UserManager();
+        $passwordGenerator = new PasswordGenerator();
+
         $errors = [];
-        $user = $checkUser->findUserFormToken($slug);
+        $user = $userManager->findUserFormToken($slug);
         if ($user == false) {
-            $errors[] = "Le lien pour réinitialiser votre mot de passe n'est pas correcte";
-            $loginPage->renderView(['errors' => $errors]);
+            return $view->renderView(['invalidToken' => true]);
+        }
+        if ($_POST && $_POST['password_1'] != $_POST['password_2']) {
+            return $view->renderView(['invalidePassword' => true]);
+        }
+        if ($_POST && $_POST['password_1'] === $_POST['password_2']) {
+            $password = $passwordGenerator->newPassWord($_POST["password_1"]);
+            $userManager->setupNewPasswordInBdd($user['username'], $password);
+            $userManager->destroyTokenFromSgbd($user['username']);
+            return Router::redirectToRoute();
         } else {
-            $userManager = new UserManager();
-            $newPassWord->renderView();
-
-            $passwordGenerator = new PasswordGenerator();
-            $password = $passwordGenerator->newPassWord($_POST ["password"]);
-            $userManager->setupNewPasswordInBdd($password);
-
+            return $view->renderView();
 
         }
 
     }
+
 
     static function destroySession()
     {
@@ -174,4 +179,5 @@ class HomeController
         Router::redirectToRoute();
 
     }
+
 }

@@ -9,7 +9,6 @@ use PDO;
 
 class PostManager
 {
-    private PDO $bdd;
 
     /**
      * frontManager constructor.
@@ -20,9 +19,9 @@ class PostManager
     }
 
     /**
-     * @return array
+     * @return PostEntity[]
      */
-    public function findAll()
+    public function findAll(): array
     {
         $bdd = $this->bdd;
         /*** accès au model ***/
@@ -32,7 +31,7 @@ class PostManager
         $posts = [];
         while ($row = $req->fetch(PDO::FETCH_ASSOC)) {
 
-            $post = new PostEntity;
+            $post = new PostEntity();
             $post->setId($row['id']);
             $post->setTitle($row['title']);
             $post->setContent($row['content']);

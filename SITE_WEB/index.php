@@ -9,8 +9,7 @@ Config::initGlobals();
 
 //
 $request = $_GET['action'] ?? 'homePage.html' ;
-$slug = $_GET['token'] ?? null;
-$router = new Router($request, $slug);
+$router = new Router($request);
 $router->renderController();
 
 
