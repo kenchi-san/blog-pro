@@ -1,0 +1,25 @@
+.block-blog{
+    border:solid;
+    border-radius: 10% ;
+    padding-left: 2%;
+    margin-bottom: 2%;
+
+}
+.block-blog h2{
+    padding-top: 1rem;
+}
+.comment-block{
+    border:solid;
+    border-radius: 10% ;
+    padding: 1%;
+    margin-bottom: 2%;
+    margin-right: 1rem;
+    margin-left: 1rem
+}
+
+.comment-block>p{
+    font-size: 0.70rem;
+}
+#blog{
+    height: 100%;
+}

@@ -4,21 +4,28 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>blog pro</title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
-          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <title>Hugo Charon / développeur PHP </title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css"
+          integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
     <!--footer css-->
 
-    <link rel="stylesheet" href="<?php echo ASSERT . '/footer.css' ?>"/>
-    <link rel="stylesheet" href="<?php echo ASSERT . '/contact.css' ?>"/>
-    <link rel="stylesheet" href="<?php echo ASSERT . '/login.css' ?>"/>
+    <link rel="stylesheet" href="<?= ASSERT . '/footer.css' ?>"/>
+    <link rel="stylesheet" href="<?= ASSERT . '/contact.css' ?>"/>
+    <link rel="stylesheet" href="<?= ASSERT . '/login.css' ?>"/>
+    <link rel="stylesheet" href="<?= ASSERT . '/blog.css' ?>"/>
+    <link rel="stylesheet" href="<?= ASSERT . '/home.css' ?>"/>
+    <link rel="stylesheet" href="<?= ASSERT . '/social.css' ?>"/>
+
+    <link rel="stylesheet" href="<?= ASSERT . '/normalize.css' ?>"/>
 
 
 </head>
 <body>
 <header>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <a class="navbar-brand" href="<?php echo HOST . 'homePage.html' ?>">Accueil</a>
+
+
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <a class="navbar-brand" href="<?php echo HOST . 'homePage.html' ?>"><img  src="<?php echo IMG."logo.jpg";  ?>"></a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown"
                 aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
@@ -38,44 +45,65 @@
                     <a class="nav-link" href="<?php echo HOST . '/public/CV_Hugo_Charon.pdf'; ?>" download="">Télécharger
                         mon CV</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="<?php echo HOST . 'backOffice.html'; ?>" >back office
-                        </a>
-                </li>
+                <?php if (!isset($_SESSION['auth']) || $_SESSION['auth']["user_status_id"] != 1) { ?>
 
-<?php
-                if (!isset($_SESSION['auth']) || empty($_SESSION['auth'])) {
+                    <?php
+                } else { ?>
+                    <li class="nav-item">
+                        <a class="nav-link" href="<?php echo HOST . 'backOffice.html'; ?>">back office
+                        </a>
+                    </li>
+                <?php }
                 ?>
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown"
-                       aria-haspopup="true" aria-expanded="false">
-                        Connection </a>
-                    <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                        <a class="dropdown-item" href="<?php echo HOST . 'loginPage.html' ?>">Se Connecter</a>
-                        <a class="dropdown-item" href="#">S'enregistrer</a>
-                    </div>
-                </li>
+
+
                 <?php
-                }else{
+                if (!isset($_SESSION['auth']) || empty($_SESSION['auth'])) {
+                    ?>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown"
+                           aria-haspopup="true" aria-expanded="false">
+                            Connexion </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                            <a class="dropdown-item" href="<?php echo HOST . 'loginPage.html' ?>">Se Connecter</a>
+                            <a class="dropdown-item" href="<?php echo HOST . 'registrer.html' ?>">S'enregistrer</a>
+                        </div>
+                    </li>
+                    <?php
+                } else {
                     ?>
                     <li class="nav-item">
-                    <a class="nav-link" href="<?php echo HOST.'destroySessionPage.html'?>">Se déconecter</a>
-                </li><?php
+                    <a class="nav-link" href="<?php echo HOST . 'logout' ?>">Se déconnecter</a>
+                    </li><?php
                 }
                 ?>
-
 
 
             </ul>
         </div>
     </nav>
+    <div id="first-img" class="jumbotron jumbotron-fluid">
+
+        <div class="container">
+            <img class="w-100" alt="développeur php" src="<?php echo IMG."homepage.jpg";  ?>">
+        </div>
+    </div>
 </header>
 
 <!--template-->
 <?php
 echo $contentPage;
 ?>
+<script src="https://cdn.ckeditor.com/ckeditor5/23.0.0/classic/ckeditor.js"></script>
 
+<script>
+    const editorsElts = document.querySelectorAll( '.editor' );
+    for(editorElt of editorsElts){
+        ClassicEditor.create(editorElt );
+    }
+
+
+</script>
 <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
         integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
         crossorigin="anonymous"></script>
@@ -91,77 +119,106 @@ echo $contentPage;
 <!--login script-->
 <!--<script src="//code.jquery.com/jquery-1.11.1.min.js"></script>-->
 </body>
-<footer>
-    <!-- Footer -->
-    <section id="footer">
-        <div class="container">
-            <div class="row text-center text-xs-center text-sm-left text-md-left">
-                <div class="col-xs-12 col-sm-4 col-md-4">
-                    <h5>Quick links</h5>
-                    <ul class="list-unstyled quick-links">
-                        <li><a href="https://www.fiverr.com/share/qb8D02"><i
-                                        class="fa fa-angle-double-right"></i>Home</a></li>
-                        <li><a href="https://www.fiverr.com/share/qb8D02"><i class="fa fa-angle-double-right"></i>About</a>
+<footer class="page-footer font-small teal pt-5 bg-light">
+
+    <!-- Footer Text -->
+    <div class="container-fluid text-center text-md-left">
+
+        <!-- Grid row -->
+        <div class="row">
+
+            <!-- Grid column -->
+            <div class="col-md-6 mt-md-0 mt-3">
+
+                <!-- Content -->
+                <h5 class="text-uppercase font-weight-bold">Plan du site</h5>
+                <ul class="list-unstyled">
+                    <li>
+                        <a class="nav-link" href="<?php echo HOST . 'blogPage.html' ?>">Blog</a>
+                    </li>
+                    <li>
+                        <a class="nav-link" href="<?php echo HOST . 'contact.html' ?>">Contact</a>
+
+                    </li>
+                    <li>
+                        <a class="nav-link" href="<?php echo HOST . '/public/CV_Hugo_Charon.pdf'; ?>" download="">Télécharger
+                            mon CV</a>
+                    </li>
+                    <?php if (!isset($_SESSION['auth']) || $_SESSION['auth']["user_status_id"] != 1) { ?>
+
+                        <?php
+                    } else { ?>
+                        <li class="nav-item">
+                            <a class="nav-link" href="<?php echo HOST . 'backOffice.html'; ?>">back office
+                            </a>
                         </li>
-                        <li><a href="https://www.fiverr.com/share/qb8D02"><i
-                                        class="fa fa-angle-double-right"></i>FAQ</a></li>
-                        <li><a href="https://www.fiverr.com/share/qb8D02"><i class="fa fa-angle-double-right"></i>Get
-                                Started</a></li>
-                        <li><a href="https://www.fiverr.com/share/qb8D02"><i class="fa fa-angle-double-right"></i>Videos</a>
+                    <?php }
+                    ?>
+
+
+                    <?php
+                    if (!isset($_SESSION['auth']) || empty($_SESSION['auth'])) {
+                        ?>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown"
+                               aria-haspopup="true" aria-expanded="false">
+                                Connexion </a>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                                <a class="dropdown-item" href="<?php echo HOST . 'loginPage.html' ?>">Se Connecter</a>
+                                <a class="dropdown-item" href="<?php echo HOST . 'registrer.html' ?>">S'enregistrer</a>
+                            </div>
                         </li>
-                    </ul>
-                </div>
-                <div class="col-xs-12 col-sm-4 col-md-4">
-                    <h5>Quick links</h5>
-                    <ul class="list-unstyled quick-links">
-                        <li><a href="https://www.fiverr.com/share/qb8D02"><i
-                                        class="fa fa-angle-double-right"></i>Home</a></li>
-                        <li><a href="https://www.fiverr.com/share/qb8D02"><i class="fa fa-angle-double-right"></i>About</a>
-                        </li>
-                        <li><a href="https://www.fiverr.com/share/qb8D02"><i
-                                        class="fa fa-angle-double-right"></i>FAQ</a></li>
-                        <li><a href="https://www.fiverr.com/share/qb8D02"><i class="fa fa-angle-double-right"></i>Get
-                                Started</a></li>
-                        <li><a href="https://www.fiverr.com/share/qb8D02"><i class="fa fa-angle-double-right"></i>Videos</a>
-                        </li>
-                    </ul>
-                </div>
-                <div class="col-xs-12 col-sm-4 col-md-4">
-                    <h5>Quick links</h5>
-                    <ul class="list-unstyled quick-links">
-                        <li><a href="https://www.fiverr.com/share/qb8D02"><i
-                                        class="fa fa-angle-double-right"></i>Home</a></li>
-                        <li><a href="https://www.fiverr.com/share/qb8D02"><i class="fa fa-angle-double-right"></i>About</a>
-                        </li>
-                        <li><a href="https://www.fiverr.com/share/qb8D02"><i
-                                        class="fa fa-angle-double-right"></i>FAQ</a></li>
-                        <li><a href="https://www.fiverr.com/share/qb8D02"><i class="fa fa-angle-double-right"></i>Get
-                                Started</a></li>
-                        <li><a href="https://wwwe.sunlimetech.com" title="Design and developed by"><i
-                                        class="fa fa-angle-double-right"></i>Imprint</a></li>
-                    </ul>
-                </div>
+                        <?php
+                    } else {
+                        ?>
+                        <li class="nav-item">
+                        <a class="nav-link" href="<?php echo HOST . 'logout' ?>">Se déconnecter</a>
+                        </li><?php
+                    }
+                    ?>
+                </ul>
+
             </div>
-            <div class="row">
-                <div class="col-xs-12 col-sm-12 col-md-12 mt-2 mt-sm-5">
-                    <ul class="list-unstyled list-inline social text-center">
-                        <li class="list-inline-item"><a href="https://www.fiverr.com/share/qb8D02"><i
-                                        class="fa fa-facebook"></i></a></li>
-                        <li class="list-inline-item"><a href="https://www.fiverr.com/share/qb8D02"><i
-                                        class="fa fa-twitter"></i></a></li>
-                        <li class="list-inline-item"><a href="https://www.fiverr.com/share/qb8D02"><i
-                                        class="fa fa-instagram"></i></a></li>
-                        <li class="list-inline-item"><a href="https://www.fiverr.com/share/qb8D02"><i
-                                        class="fa fa-google-plus"></i></a></li>
-                        <li class="list-inline-item"><a href="https://www.fiverr.com/share/qb8D02" target="_blank"><i
-                                        class="fa fa-envelope"></i></a></li>
-                    </ul>
+            <!-- Grid column -->
+
+            <hr class="clearfix w-100 d-md-none pb-3">
+
+            <!-- Grid column -->
+            <div class="col-md-6 mb-md-0 mb-3">
+
+                <!-- Content -->
+                <h5 class="text-uppercase font-weight-bold">Réseaux sociaux</h5>
+
+                <div class="social-buttons">
+
+                    <!-- LinkedIn Button -->
+                    <a href="https://www.linkedin.com/in/hugo-charon/" class="social-margin" target="blank">
+                        <div class="social-icon linkedin">
+                            <i class="fa fa-linkedin" aria-hidden="true"></i>
+                        </div>
+                    </a>
+                    <!-- Github Button -->
+                    <a href="https://github.com/kenchi-san"  target="blank"  class="social-margin">
+                        <div class="social-icon github">
+                            <i class="fa fa-github-alt" aria-hidden="true"></i>
+                        </div>
+                    </a>
+
+
+
+
                 </div>
-                <hr>
             </div>
 
+            </div>
+            <!-- Grid column -->
+
         </div>
-    </section>
-    <!-- ./Footer -->
+        <!-- Grid row -->
+
+    </div>
+    <!-- Footer Text -->
+
+
 </footer>
 </html>

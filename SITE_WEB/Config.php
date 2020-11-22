@@ -16,7 +16,9 @@ class Config
         define('HOST', 'http://'. $host . '/P5/SITE_WEB/');
 
         define('ASSERT', HOST.'/public/css');
-        define('VIEW', __DIR__.'/view/frontViews/') ;
+        define('IMG',HOST.'public/img/');
+        define('VIEW', __DIR__.'/view') ;
+        define('DL_IMG', __DIR__) ;
     }
 
 

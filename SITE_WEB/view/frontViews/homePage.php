@@ -1,45 +1,90 @@
-<div class="container-fluid">
-    <div class="row">
-        <aside class="d-none d-sm-none d-md-block col-md-3 col-lg-3">
-            <div>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aspernatur autem dolorum eum facere id,
-                laboriosam minus molestiae sed vero! Cupiditate exercitationem, laborum omnis placeat quas qui
-                ratione
-                vel. Quae, sint.
-            </div>
-            <div>Accusantium aut consequuntur dolore dolores nulla odio qui quis totam vitae voluptatem. Beatae
-                culpa
-                dicta molestiae repellendus rerum! Ad asperiores autem beatae consequuntur exercitationem facere
-                iste,
-                laboriosam nobis sequi voluptates?
-            </div>
-            <div>Accusantium animi aut beatae corporis deserunt dignissimos dolor eius eos exercitationem explicabo
-                impedit ipsum libero magnam mollitia nulla numquam odit, optio perferendis quae quaerat quibusdam
-                reiciendis rerum sapiente suscipit, tempore.
-            </div>
-            <div>A aliquam cumque ex exercitationem facere fuga harum hic impedit, laudantium, magnam minima nobis
-                possimus quam sapiente totam ullam voluptatem voluptates. Cupiditate distinctio dolor impedit,
-                magnam
-                tempore tenetur vero voluptates?
-            </div>
-            <div>A accusantium cumque dignissimos est ex, id itaque maiores neque nobis officia possimus unde.
-                Adipisci
-                consequuntur dignissimos, fugiat ipsum maiores mollitia nam numquam! Adipisci earum explicabo,
-                itaque
-                numquam quibusdam ut!
-            </div>
+<div class="container">
+    <section class="row pb-2">
+        <div class="col-lg-12 col-sm-12">
+            <h1>
+                A propos de moi
+            </h1>
+            <p>
+                Jeune développeur diplomé depuis 2019 chez OpenClassrooms sur le parcours Chef de projet, spécialisé sur
+                la technologie php/Symfony. Je suis passionné par la programmation et la création d'application en tout
+                genre.
+            </p>
+            Depuis la fin de mon parcours, je garde une veille technologique constante et continue de réaliser des
+            procjets qui sont consultables sur
+            <a href="https://github.com/kenchi-san">mon GitHub</a>.
+            <br>Vous trouverez toutes les informations ci-dessous.
 
 
-        </aside>
-        <section class="col-md-9 col-lg-9" >
-            <?php if ($user = $session->isUserAuthenticated()) {
-                var_dump($user);
-            }else{
-                echo 'persone de co';
-            }
-                ?>
+        </div>
+    </section>
 
-        </section>
-    </div>
+    <!--list of movies with picture-->
+    <section class="container">
+        <div class="pt-5 pb-5">
+            <?php foreach ($experiences as $key => $experience){
+                if ($key % 2) {
+                    ?>
+
+                    <div class="row">
+                        <div class="col-sm-6 order-sm-2">
+                            <img class="w-100" alt="<?php echo $experience->getImg();  ?>" src="<?php echo IMG.$experience->getImg().'.jpeg';  ?>">
+                        </div>
+                        <div class="col-sm-6 order-sm-1">
+                            <div class="mt-5">
+                                <h1><?php echo $experience->getTitle(); ?></h1>
+                                <br>
+                                <?php echo $experience->getDescription(); ?>
+                            </div>
+                            <div class="row">
+                                <div class="offset-lg-4 col-lg-6 offset-lg-2 pt-lg-5">
+                                    <a href="<?=HOST.'showExperience.html?experienceId='.$experience->getId()?>" class="btn btn-info" role="button">Voir plus</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <?php
+                } else { ?>
+                    <div class="row">
+                        <div class="col-sm-6 order-sm-1 ">
+                            <img class="w-100" alt="<?php echo $experience->getImg();  ?>" src="<?php echo IMG.$experience->getImg();  ?>">
+                        </div>
+                        <div class="col-sm-6 order-sm-2">
+                            <div class="mt-5">
+
+                                <h1><?php echo $experience->getTitle(); ?></h1>
+                                <br>
+                                <?php echo $experience->getDescription(); ?>
+                            </div>
+                            <div class="row">
+                                <div class="offset-lg-4 col-lg-6 offset-lg-2 pt-lg-5">
+                                    <a href="<?=HOST.'showExperience.html?experienceId='.$experience->getId()?>" class="btn btn-info" role="button">Voir plus</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                <?php }?>
+
+
+            <?php } ?>
+
+
+    </section>
+
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+            integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+            crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+            integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+            crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+            integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+            crossorigin="anonymous"></script>
 </div>
+
+
 
 

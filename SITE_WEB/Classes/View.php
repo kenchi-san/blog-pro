@@ -4,37 +4,35 @@ namespace App\Classes;
 
 class View
 {
+    const FRONT_GABARIT = "/frontViews/gabarit.php";
+    const BACK_GARARIT = "/backViews/gabarit.php";
+
     private $template;
 
-    public function __construct($template = null)
+    public function __construct($template)
     {
-        $this->template = $template;
+        $this->template = $template . ".php";
     }
 
-    /**
-     * @param null $params
-     */
-    public function renderView($params = null)
+    public function clean($value){
+        return htmlspecialchars(trim($value));
+    }
+
+    public function renderView($params = [])
     {
         $session = new Session();
 
-        if (empty($params)){
-
-            $template = $this->template;
-            ob_start();
-            include_once(VIEW . $template . '.php');
-            $contentPage = ob_get_clean();
-            include_once(VIEW . 'gabarit.php');
-        }else{
-            extract($params);
-            $template = $this->template;
-            ob_start();
-            include_once(VIEW . $template . '.php');
-            $contentPage = ob_get_clean();
-            include_once(VIEW . 'gabarit.php');
+        $template = explode("/", $this->template, 3);
+        extract($params);
+        ob_start();
+        include_once(VIEW . $this->template);
+        $contentPage = ob_get_clean();
+        if ($template[1] == 'frontViews') {
+            include_once(VIEW . self::FRONT_GABARIT);
+        } else {
+            include_once(VIEW . self::BACK_GARARIT);
         }
 
-        return true;
 
     }
 

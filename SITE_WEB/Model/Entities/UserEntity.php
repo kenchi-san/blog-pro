@@ -4,8 +4,11 @@
 namespace Model\Entities;
 
 
+use App\Model\HydratorTrait;
+
 class UserEntity
 {
+    use HydratorTrait;
 
     private $id;
     private $username;

@@ -4,6 +4,8 @@
 namespace App\Classes;
 
 
+use App\Exception\ForbiddenAccessException;
+use App\Exception\NeedAuthenticationException;
 use Model\Entities\UserEntity;
 
 class Session
@@ -28,6 +30,7 @@ class Session
         $userData = $_SESSION[self::AUTH_KEY];
 
         $user = new UserEntity();
+
         $user->setName($userData['name']);
         $user->setUsername($userData['username']);
         $user->setId($userData['id']);
@@ -36,6 +39,38 @@ class Session
         $user->setEmail($userData['email']);
         $user->setPassword($userData['password']);
         $user->setCreateTime($userData['create_time']);
+
         return $user;
+
     }
+
+    /**
+     * @throws ForbiddenAccessException
+     * @throws NeedAuthenticationException
+     */
+    public function checkAdminAutorisation()
+    {
+        $user = $this->checkAuth();
+        if ($user && $user->getUserStatusId() == 1) {
+
+            return $user;
+        } else {
+            throw new ForbiddenAccessException("Vous n'avez pas les droits pour accéder à cette page");
+         }
+    }
+
+    /**
+     * @return UserEntity
+     * @throws NeedAuthenticationException
+     */
+    public function checkAuth(){
+        $user = $this->isUserAuthenticated();
+
+        if ($user) {
+            return $user;
+        } else {
+            throw new NeedAuthenticationException("Vous devez vous connecter");
+        }
+    }
+
 }

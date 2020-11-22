@@ -4,8 +4,13 @@
 namespace Model\Entities;
 
 
+use App\Model\HydratorTrait;
+
 class PostEntity
 {
+
+    use HydratorTrait;
+
     private $id;
     private $title;
     private $resume;
@@ -13,6 +18,19 @@ class PostEntity
     private $created_at;
     private $user_id;
     private $updated_at;
+
+
+    public function __construct()
+{
+    $this->setUpdatedAt(date('Y-m-d H:i:s'));
+}
+
+    /**
+     * @var UserEntity|null
+     */
+    private $user = null;
+
+
 
     /**
      * @return mixed
@@ -111,12 +129,14 @@ class PostEntity
         $this->user_id = $user_id;
     }
 
+
     /**
      * @return mixed
      */
     public function getUpdatedAt()
     {
         return $this->updated_at;
+
     }
 
     /**
@@ -125,6 +145,24 @@ class PostEntity
     public function setUpdatedAt($updated_at)
     {
         $this->updated_at = $updated_at;
+        return $this;
     }
+
+    /**
+     * @return UserEntity|null
+     */
+    public function getUser(): ?UserEntity
+    {
+        return $this->user;
+    }
+
+    /**
+     * @param UserEntity|null $user
+     */
+    public function setUser(?UserEntity $user): void
+    {
+        $this->user = $user;
+    }
+
 
 }

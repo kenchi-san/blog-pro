@@ -4,18 +4,12 @@
 namespace Model;
 
 
+use App\Model\Manager;
 use PDO;
 
-class UserManager
+class UserManager extends Manager
 {
 
-    /**
-     * SecurityManager constructor.
-     */
-    public function __construct()
-    {
-        $this->bdd = new PDO('mysql:host=localhost;dbname=blop_pro;charset=utf8', 'root', 'root', array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION));
-    }
 
     /**
      * @param string $mail
@@ -80,22 +74,47 @@ class UserManager
     {
         if ($login) {
 
-            $query = "SELECT * FROM user
-INNER JOIN user_status us on user.user_status_id = us.id
-WHERE username = :username";
+            $query = "SELECT u.id ,u.email,u.firstname,u.username,u.user_status_id,u.name,u.password,u.create_time FROM user u
+INNER JOIN user_status us on u.user_status_id = us.id 
+WHERE username = :username ";
             $req = $this->bdd->prepare($query);
             $req->execute(array('username' => $login));
             $result = $req->fetch(PDO::FETCH_ASSOC);
             $req->closeCursor();
 
+
             if ($result['username'] === $login) {
                 if (password_verify($password, $result['password'])) {
+
                     return $result;
+
                 }
             }
             return false;
         }
+        return true;
+    }
 
+    public function checkUserToTheBdd($username, $email)
+    {
+        if ($username || $email) {
+
+            $query = "SELECT u.id as userId, u.name,u.username,u.firstname,u.email,u.create_time FROM user u WHERE username = :username OR email = :email";
+            $req = $this->bdd->prepare($query);
+            $req->execute(array('username' => $username, 'email' => $email));
+            $result = $req->fetch(PDO::FETCH_ASSOC);
+            $req->closeCursor();
+            if ($username === $result['username']) {
+
+                return false;
+            }
+            if ($email === $result['email']) {
+
+                return false;
+            }
+            return true;
+        }
+        return true;
     }
 
     public function setupNewPasswordInBdd($login, $password)
@@ -122,4 +141,20 @@ WHERE username = :username";
         ]);
         return $result;
     }
+
+    public function newUser(array $dataUser)
+    {
+
+        $req = $this->bdd->prepare("INSERT INTO user (username, name, firstname, email, password) VALUES (:username, :name, :firstname, :email, :password)");
+        $req->bindParam('name', $dataUser['name']);
+        $req->bindParam('username', $dataUser['username']);
+        $req->bindParam('firstname', $dataUser['firstname']);
+        $req->bindParam('email', $dataUser['email']);
+        $req->bindParam('password', $dataUser['password']);
+        $req->execute();
+        return $req;
+
+    }
+
+
 }
