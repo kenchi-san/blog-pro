@@ -13,16 +13,16 @@
                 <tr>
                     <td class="text-center rowspan='2'">
          <textarea name="content" class="editor">
-            <?= $comment->getcontent(); ?>
+            <?= $this->clean($comment->getcontent()); ?>
         </textarea>
                         <p><input type="submit" value="Submit"></p></td>
 
 
                 </tr>
                 <tr>
-                    <td class="text-center">créé le <?php $date = $comment->getcreatedAt();
+                    <td class="text-center">créé le <?= $date = $comment->getcreatedAt();
                         $dt = DateTime::createFromFormat('Y-m-d H:i:s', $date);
-                        echo $this->clean($dt->format('d/m/Y'));
+                        $this->clean($dt->format('d/m/Y'));
                         ?>
                 </tr>
                 </tbody>

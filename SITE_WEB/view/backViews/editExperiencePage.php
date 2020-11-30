@@ -1,6 +1,3 @@
-<?php //foreach ($experiences as $experience) {
-//    var_dump($experiences);
-//} ?>
 
 <div class="row">
     <table class="shadow table table-hover mr-3 mt-3 ">
@@ -37,8 +34,8 @@
 
 
 
-                <td class=" text-center"><img class="w-10" alt="<?= $this->clean($experience->getImg()); ?>"
-                                   src="<?= IMG . $this->clean($experience->getImg()) . '.jpeg'; ?>"></td>
+                <td class=" text-center"><img class="w-10" alt="<?= $this->clean(IMG.$experience->getImg()); ?>"
+                                   src="<?= $this->clean(IMG . $experience->getImg()); ?>"></td>
 
             </tr>
             <tr>

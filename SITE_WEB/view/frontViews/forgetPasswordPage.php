@@ -9,14 +9,13 @@
                         <p>Veuillez renseigner votre mail</p>
                         <?php
                         if (isset($errors)){
-                            foreach ($errors as $error) {
+                            foreach ($errors as $error) {?>
 
-                                echo '<div class="alert alert-danger" role="alert">'.$error.'</div>';
-                            }
-
-                        }
-
-                        ;?>
+                                <div class="alert alert-danger" role="alert">
+                                    <?=$this->clean($error);?>
+                                </div>;
+                            <?php}
+                        }?>
                         <div class="panel-body">
 
                             <form id="register-form" role="form" class="form" method="post">
@@ -30,8 +29,6 @@
                                 <div class="form-group">
                                     <input name="recover-submit" class="btn btn-lg btn-primary btn-block" value="Reset Password" type="submit">
                                 </div>
-
-<!--                                <input type="hidden" class="hide" name="token" id="token" value="">-->
                             </form>
 
                         </div>

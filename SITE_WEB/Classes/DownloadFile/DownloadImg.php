@@ -8,42 +8,20 @@ class DownloadImg
 {
 
 
-    public function imgFromForm($img = null, $lastImg = null)
+    public function imgFromForm($img,$lastImg = null)
     {
+        // Pas d'image soumise
+        if (isset($img['img']['name']) && empty($img['img']['name'])) {
+            return $lastImg;
+        }
 
-
-        /** ne change rien car on change que le text**/
+        //Une image est soumise
         if (isset($lastImg) && !empty($lastImg)) {
-            if (isset($_FILES['img']['name']) && empty($_FILES['img']['name'])) {
-                return $lastImg;
-            }
-
+                @unlink(DL_IMG . "/public/img/" . $lastImg );
         }
-        /** change une image déjà existante**/
-        if (isset($lastImg) && !empty($lastImg)) {
-            if (isset($_FILES['img']['name']) && !empty($_FILES['img']['name'])) {
-                unlink(DL_IMG . "/public/img/" . $lastImg . ".jpeg");
-                rename($_FILES['img']['tmp_name'], DL_IMG . '/public/img/' . $_FILES['img']['name'] . '.jpeg');
-                return $_FILES['img']['name'];
-
-            }
-            return true;
-        }
-        /** met en place une première image**/
-        if (isset($lastImg) && empty($lastImg)) {
-            if (isset($_FILES['img']['name']) && !empty($_FILES['img']['name'])) {
-                rename($_FILES['img']['tmp_name'], DL_IMG . '/public/img/' . $_FILES['img']['name'] . '.jpeg');
-                return $_FILES['img']['name'];
-            }
-            return true;
-        }
-        if (isset($lastImg) && empty($lastImg)) {
-            if (isset($_FILES['img']['name']) && empty($_FILES['img']['name'])) {
-                return null;
-            }
-
-        }
-
+        $name = uniqid().$_FILES['img']['name'];
+        move_uploaded_file($img['img']['tmp_name'], DL_IMG . '/public/img/' .  $name);
+        return $name;
     }
 
 }

@@ -15,8 +15,8 @@
     <div class="container">
         <div class="mt-4 mb-4">
             <form method="post">
-                <input type="text" id="password" class="fadeIn second form-control" name="password_1"
-                       placeholder="nouveau mot de passe">
+                <label for="password"></label><input type="text" id="password" class="fadeIn second form-control" name="password_1"
+                                                     placeholder="nouveau mot de passe">
                 <div class="valid-feedback">Ok !</div>
                 <div class="invalid-feedback">Valeur incorrecte</div>
                 <input type="text" id="password" class="fadeIn third " name="password_2"

@@ -27,13 +27,13 @@
 
                     <div class="row">
                         <div class="col-sm-6 order-sm-2">
-                            <img class="w-100" alt="<?php echo $experience->getImg();  ?>" src="<?php echo IMG.$experience->getImg().'.jpeg';  ?>">
+                            <img class="w-100" alt="<?= $this->clean($experience->getImg());  ?>" src="<?= $this->clean(IMG.$experience->getImg());  ?>">
                         </div>
                         <div class="col-sm-6 order-sm-1">
                             <div class="mt-5">
-                                <h1><?php echo $experience->getTitle(); ?></h1>
+                                <h1><?= $experience->getTitle(); ?></h1>
                                 <br>
-                                <?php echo $experience->getDescription(); ?>
+                                <?= $experience->getDescription(); ?>
                             </div>
                             <div class="row">
                                 <div class="offset-lg-4 col-lg-6 offset-lg-2 pt-lg-5">
@@ -46,14 +46,14 @@
                 } else { ?>
                     <div class="row">
                         <div class="col-sm-6 order-sm-1 ">
-                            <img class="w-100" alt="<?php echo $experience->getImg();  ?>" src="<?php echo IMG.$experience->getImg();  ?>">
+                            <img class="w-100" alt="<?= $this->clean($experience->getImg());  ?>" src="<?= $this->clean(IMG.$experience->getImg());  ?>">
                         </div>
                         <div class="col-sm-6 order-sm-2">
                             <div class="mt-5">
 
-                                <h1><?php echo $experience->getTitle(); ?></h1>
+                                <h1><?= $experience->getTitle(); ?></h1>
                                 <br>
-                                <?php echo $experience->getDescription(); ?>
+                                <?= $experience->getDescription(); ?>
                             </div>
                             <div class="row">
                                 <div class="offset-lg-4 col-lg-6 offset-lg-2 pt-lg-5">

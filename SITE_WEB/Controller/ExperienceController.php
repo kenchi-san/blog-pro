@@ -27,6 +27,7 @@ class ExperienceController
     public function editDetailExperience()
     {
         $session = new Session();
+
         $session->checkAdminAutorisation();
         if (isset($_GET['experienceId'])) if (!empty($_GET['experienceId'])) {
             $experienceManager = new ExperienceManager();
@@ -36,21 +37,23 @@ class ExperienceController
             $experienceId = $_GET['experienceId'];
             $experience = $experienceManager->findExperienceById($experienceId);
 
-            $curentImage = $imgManager->imgFromForm($_FILES, $experience['0']->getImg());
-
-
-            $detailView->renderView(['exp' => $experience]);
             if ($_POST) {
+                if (!empty($_FILES)) {
+                    $curentImage = $imgManager->imgFromForm($_FILES, $experience['0']->getImg());
+                }
                 $experienceManager = new ExperienceManager();
                 $experienceManager->editExperience($_GET['experienceId'], $_POST, $curentImage);
+                header('Location:' . HOST . 'editExperience.html?experienceId=' . $experienceId);
 
             }
-
-        } else return false;
+            $detailView->renderView(['exp' => $experience]);
+        }
 
     }
 
-    public function deleteExperience()
+
+    public
+    function deleteExperience()
     {
         $session = new Session();
         $session->checkAdminAutorisation();
@@ -64,7 +67,8 @@ class ExperienceController
 
     }
 
-    public function addExperience()
+    public
+    function addExperience()
     {
         $session = new Session();
         $user_id = $session->checkAdminAutorisation();
