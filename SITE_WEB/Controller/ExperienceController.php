@@ -5,87 +5,85 @@ namespace App\Controller;
 
 
 use App\Classes\DownloadFile\DownloadImg;
-use App\Classes\Router;
-use App\Classes\Session;
 use App\Classes\View;
+use App\Exception\NotfoundPageException;
 use App\Model\ExperienceManager;
 
-class ExperienceController
+class ExperienceController extends AbstractController
 {
-
     public function showDetailExperience()
     {
-        if (isset($_GET['experienceId'])) if (!empty($_GET['experienceId'])) {
+        if (!empty($this->request->get('experienceId'))) {
             $experienceManager = new ExperienceManager();
-            $experienceId = $_GET['experienceId'];
+            $experienceId = $this->request->get('experienceId');
             $experienceView = new View('/frontViews/experienceDetails');
             $experiences = $experienceManager->findExperienceById($experienceId);
             $experienceView->renderView(['experiences' => $experiences]);
         }
+        throw new NotfoundPageException();
     }
 
     public function editDetailExperience()
     {
-        $session = new Session();
-
-        $session->checkAdminAutorisation();
-        if (isset($_GET['experienceId'])) if (!empty($_GET['experienceId'])) {
-            $experienceManager = new ExperienceManager();
-            $imgManager = new DownloadImg();
-            $detailView = new View('/backViews/editExperiencePage');
-
-            $experienceId = $_GET['experienceId'];
-            $experience = $experienceManager->findExperienceById($experienceId);
-
-            if ($_POST) {
-                if (!empty($_FILES)) {
-                    $curentImage = $imgManager->imgFromForm($_FILES, $experience['0']->getImg());
-                }
-                $experienceManager = new ExperienceManager();
-                $experienceManager->editExperience($_GET['experienceId'], $_POST, $curentImage);
-                header('Location:' . HOST . 'editExperience.html?experienceId=' . $experienceId);
-
-            }
-            $detailView->renderView(['exp' => $experience]);
+        $this->session->checkAdminAutorisation();
+        if (empty($this->request->get('experienceId'))) {
+            throw new NotfoundPageException();
         }
+
+        $experienceManager = new ExperienceManager();
+        $imgManager = new DownloadImg();
+        $detailView = new View('/backViews/editExperiencePage');
+
+        $experienceId = $this->request->get('experienceId');
+        $experience = $experienceManager->findExperienceById($experienceId);
+
+        if (!empty($this->request->post('title') || $this->request->post('description') || $this->request->post('link'))) {
+            $experienceManager = new ExperienceManager();
+            $curentImage = $imgManager->imgFromForm($this->request->file('name'), $this->request->file('tmp_name'), $experience['0']->getImg());
+            $experienceManager->editExperience($this->request->get('experienceId'), $this->request->post('title'), $this->request->post('description'), $this->request->post('link'), $curentImage);
+            $this->redirectTo('editExperience.html?experienceId=' . $experienceId);
+
+        }
+        $detailView->renderView(['exp' => $experience]);
+
 
     }
 
 
-    public
-    function deleteExperience()
+    public function deleteExperience()
     {
-        $session = new Session();
-        $session->checkAdminAutorisation();
-        if (isset($_GET['experienceId'])) if (!empty($_GET['experienceId'])) {
+
+        $this->session->checkAdminAutorisation();
+        if (!empty($this->request->get('experienceId'))) {
             $experienceManager = new ExperienceManager();
-            $experienceId = $_GET['experienceId'];
+            $experienceId = $this->request->get('experienceId');
             $experienceManager->deleteExperience($experienceId);
-            Router::redirectToBackOff();
+            $this->redirectTo('backOffice.html');
         }
 
 
     }
 
-    public
-    function addExperience()
+    public function addExperience()
     {
-        $session = new Session();
-        $user_id = $session->checkAdminAutorisation();
+
+        $user_id = $this->session->checkAdminAutorisation();
         $experienceView = new View('/backViews/addExperiencePage');
 
 
         if ($_POST != null) {
             $imgManager = new DownloadImg();
-            $user = ['user_id' => (int)$user_id->getId(), 'img' => $_FILES['img']['name']];
-            $data = array_merge($user, $_POST);
-            $dataExperience[] = $data;
 
+            $user = $user_id->getId();
+            $imgName = $this->request->file('name');
+            $tmp_name = $this->request->file('tmp_name');
+            $title = $this->request->post('title');
+            $description = $this->request->post('description');
+            $link = $this->request->post('link');
             $experienceManager = new ExperienceManager();
-            $imgManager->imgFromForm($_FILES);
-
-            $experienceManager->addExperiences($dataExperience);
-            Router::redirectToBackOff();
+            $lastImgName = $imgManager->imgFromForm($imgName, $tmp_name);
+            $experienceManager->addExperience($user, $lastImgName, $title, $description, $link);
+            $this->redirectTo('backOffice.html');
         }
 
         $experienceView->renderView();

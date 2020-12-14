@@ -1,6 +1,5 @@
 <?php
 
-
 namespace App\Model;
 
 
@@ -12,7 +11,7 @@ class ExperienceManager extends Manager
 
     use HydratorTrait;
 
-    public function findExperiences()
+    public function findAllExperiences()
     {
 
         /*** accès au model ***/
@@ -46,15 +45,15 @@ class ExperienceManager extends Manager
         return $experiences;
     }
 
-    function addExperiences($dataExperience)
+    function addExperience($user_id, $img, $title, $description, $link)
     {
         $query = "INSERT INTO experience (user_id, title, description,img, link) VALUES (:user_id, :title, :description,:img, :link)";
         $req = $this->bdd->prepare($query);
-        $req->bindParam(':user_id', $dataExperience[0]['user_id']);
-        $req->bindParam(':title', $dataExperience[0]['title']);
-        $req->bindParam('description', $dataExperience[0]['description']);
-        $req->bindParam('img', $dataExperience[0]['img']);
-        $req->bindParam('link', $dataExperience[0]['link']);
+        $req->bindParam(':user_id', $user_id);
+        $req->bindParam(':title', $title);
+        $req->bindParam('description', $description);
+        $req->bindParam('img', $img);
+        $req->bindParam('link', $link);
         $result = $req->execute();
         return $result;
     }
@@ -67,21 +66,18 @@ class ExperienceManager extends Manager
         return $result;
     }
 
-    public function editExperience($id, $dataPost, $img)
+    public function editExperience($id, $title,$description,$link, $img)
     {
-
-        $experience = new ExperienceEntity();
-        $experience->getUpdatedAt();
-        $data = array_merge(['id' => $id], $dataPost);
-        $req = $this->bdd->prepare('UPDATE experience SET title = :nvtitle, description= :nvdescription, link = :nvlink, img = :nvimg WHERE id=:id');
-
+//
+        $req = $this->bdd->prepare('UPDATE experience SET title = :nvtitle, description= :nvdescription, link = :nvlink, img = :nvimg, updated_at =:update_date WHERE id=:id');
 
         $result = $req->execute([
-            'id' => $data['id'],
-            'nvtitle' => $data['title'],
-            'nvdescription' => $data['description'],
-            'nvlink' => $data['link'],
-            'nvimg' => $img
+            'id' => $id,
+            'nvtitle' => $title,
+            'nvdescription' => $description,
+            'nvlink' => $link,
+            'nvimg' => $img,
+            'update_date' => date('Y-m-d H:i:s')
         ]);
         return $result;
 

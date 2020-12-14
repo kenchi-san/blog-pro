@@ -45,15 +45,15 @@
                     <a class="nav-link" href="<?php echo HOST . '/public/CV_Hugo_Charon.pdf'; ?>" download="">Télécharger
                         mon CV</a>
                 </li>
-                <?php if (!isset($_SESSION['auth']) || $_SESSION['auth']["user_status_id"] != 1) { ?>
+                <?php if (!isset($_SESSION['auth']) || $_SESSION['auth']["user_status_id"] != 1) : ?>
 
                     <?php
-                } else { ?>
+                 else : ?>
                     <li class="nav-item">
                         <a class="nav-link" href="<?php echo HOST . 'backOffice.html'; ?>">back office
                         </a>
                     </li>
-                <?php }
+                <?php endif;
                 ?>
 
 

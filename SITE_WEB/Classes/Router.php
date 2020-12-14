@@ -2,6 +2,7 @@
 
 namespace App\Classes;
 
+use App\Controller\AbstractController;
 use App\Controller\BackController;
 use App\Controller\BlogController;
 use App\Controller\ExperienceController;
@@ -14,12 +15,10 @@ use App\Exception\NotfoundPageException;
 
 class Router
 {
-
     private $request;
     private $route = [
         'homePage.html' => ['class' => HomeController::class, 'method' => 'showHome'],
         'contact.html' => ['class' => HomeController::class, 'method' => 'showContact'],
-        '404.html' => ['class' => HomeController::class, 'method' => 'error404'],
         'test.html' => ['class' => HomeController::class, 'method' => 'test'],
 
         'loginPage.html' => ['class' => UserController::class, 'method' => 'login'],
@@ -27,16 +26,20 @@ class Router
         'resetPassword.html' => ['class' => UserController::class, 'method' => 'newPassWordRequest'],
         'newPasswordPage.html' => ['class' => UserController::class, 'method' => 'newPassWord'],
         'registrer.html' => ['class' => UserController::class, 'method' => 'addUser'],
+        'listOfUsers.html' => ['class' => UserController::class, 'method' => 'memberOfSiteWeb'],
+
 
         'blogPage.html' => ['class' => BlogController::class, 'method' => 'showBlog'],
         'detail_post.html' => ['class' => BlogController::class, 'method' => 'showDetailBlog'],
-        'deletePost'=>['class' => BlogController::class, 'method' => 'deletePost'],
-        'addPost.html'=>['class' => BlogController::class, 'method' => 'addPost'],
-        'editPost.html'=>['class' => BlogController::class, 'method' => 'editPost'],
-        'addComment.html'=>['class'=>BlogController::class,'method'=>'addComment'],
-        'editComment.html'=>['class'=>BlogController::class,'method'=>'editComment'],
-        'deleteComment'=>['class'=>BlogController::class,'method'=>'deleteComment'],
-        'switchCommentStatus.html'=>['class'=>BlogController::class,'method'=>'switchStatusOfComment'],
+        'detail_comment.html' => ['class' => BlogController::class, 'method' => 'showDetailComment'],
+        'deletePost' => ['class' => BlogController::class, 'method' => 'deletePost'],
+        'addPost.html' => ['class' => BlogController::class, 'method' => 'addPost'],
+        'editPost.html' => ['class' => BlogController::class, 'method' => 'editPost'],
+        'addComment.html' => ['class' => BlogController::class, 'method' => 'addComment'],
+        'editComment.html' => ['class' => BlogController::class, 'method' => 'editComment'],
+        'deleteComment' => ['class' => BlogController::class, 'method' => 'deleteComment'],
+        'switchCommentStatus.html' => ['class' => BlogController::class, 'method' => 'switchStatusOfComment'],
+        'switchAuthorOfPost.html' => ['class' => BlogController::class, 'method' => 'switchAuthorOfPost'],
 
 
         'showExperience.html' => ['class' => ExperienceController::class, 'method' => 'showDetailExperience'],
@@ -76,7 +79,7 @@ class Router
 
             }
         } catch (ForbiddenAccessException $e) {
-            self::redirectToRoute();
+            self::redirectToErrorPage($e->getMessage());
         } catch (NeedAuthenticationException $e) {
             self::redirectToLoginPage();
         } catch (NotfoundPageException $e) {
@@ -84,31 +87,21 @@ class Router
         }
 
     }
+static function redirectToLoginPage(){
+    $View = new View('/frontViews/loginPage');
+    $View->renderView();
+}
 
-    static function redirectToRoute()
-    {
-
-        header('Location:' . HOST . 'homePage.html');
-        exit();
-    }
-
-    static function redirectToLoginPage()
-    {
-        header('Location:' . HOST . 'loginPage.html');
-        exit();
-
-    }
-
-    static function redirectToBackOff()
-    {
-        header('Location:' . HOST . 'backOffice.html');
-        exit();
-
-    }
 
     static function redirectTo404Page($message = null)
     {
         $View = new View('/frontViews/erreur404');
+        $View->renderView(['message' => $message]);
+    }
+
+    static function redirectToErrorPage($message = null)
+    {
+        $View = new View('/frontViews/erreurPage');
         $View->renderView(['message' => $message]);
     }
 }

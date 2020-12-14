@@ -9,7 +9,7 @@ class Config
 
     public static function initGlobals()
     {
-//
+
 //         URL
         $host = $_SERVER['HTTP_HOST'];
 

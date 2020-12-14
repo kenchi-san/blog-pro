@@ -7,10 +7,12 @@ namespace App\Controller;
 use App\Classes\Router;
 use App\Classes\Session;
 use App\Classes\View;
+use App\Exception\NotfoundPageException;
 use App\Model\CommentManager;
 use App\Model\PostManager;
+use Model\UserManager;
 
-class BlogController
+class BlogController extends AbstractController
 {
 
 
@@ -26,19 +28,19 @@ class BlogController
     public function showDetailBlog()
     {
 
-        if (!empty($_GET['postId'])) if (isset($_GET['postId'])) {
+        if (!empty($this->request->get('postId'))) {
             $postManager = new PostManager();
             $commentManager = new CommentManager();
-            $postId = $_GET['postId'];
-            $posts = $postManager->findById($postId);
-
+            $postId = $this->request->get('postId');
+            $post = $postManager->findById($postId);
             $comments = $commentManager->findIdCommentFromOnePost($postId);
-
             $detailView = new View('/frontViews/postsDetails');
-            $detailView->renderView(['posts' => $posts, 'comments' => $comments]);
-            $this->addComment($_POST, $postId);
+            $detailView->renderView(['post' => $post, 'comments' => $comments]);
+            $this->addComment($this->request->post('content'), $postId);
 
-        } else return false;
+        } else {
+            throw new NotfoundPageException();
+        }
 
 
     }
@@ -51,14 +53,15 @@ class BlogController
         $postView = new View('/backViews/addPost');
 
 
-        if ($_POST) {
-            $user = ['user_id' => (int)$user_id->getId()];
-            $data = array_merge($user, $_POST);
-            $dataPost[] = $data;
+        if (!empty($this->request->post('title')) && !empty($this->request->post('resume')) && !empty($this->request->post('content'))) {
+            $user = $user_id->getId();
+            $title = $this->request->post('title');
+            $resume = $this->request->post('resume');
+            $content = $this->request->post('content');
 
-            $postManager->addPost($dataPost);
+            $postManager->addPost($user, $title, $resume, $content);
 
-            Router::redirectToBackOff();
+            $this->redirectTo('backOffice.html');
         }
 
         $postView->renderView();
@@ -66,38 +69,63 @@ class BlogController
 
     public function deletePost()
     {
-        $session = new Session();
-        $session->checkAdminAutorisation();
+        $this->session->checkAdminAutorisation();
         $postManager = new PostManager();
 
-        if (isset($_GET['postId'])) if (!empty($_GET['postId'])) {
-            $postId = $_GET['postId'];
+        if (!empty($this->request->get('postId'))) {
+            $postId = $this->request->get('postId');
             $postManager->deletePost($postId);
-            Router::redirectToBackOff();
+            $this->redirectTo('backOffice.html');
         }
     }
 
     public function editPost()
     {
-        $session = new Session();
-        $session->checkAdminAutorisation();
+        $this->session->checkAdminAutorisation();
 
-        if (isset($_GET['postId'])) if (!empty($_GET['postId'])) {
-            $postView = new View('/backViews/editPost');
-            $postManager = new PostManager();
-
-            $postId = $_GET['postId'];
-            $posts = $postManager->findById($postId);
-
-            $postView->renderView(['posts' => $posts]);
-            if ($_POST) {
-
-                $postManager->updatePost($_POST, $postId);
-
-            } else return false;
-
-
+        $postId = $this->request->get('postId');
+        if ($postId === null) {
+            throw new NotfoundPageException();
         }
+        $postManager = new PostManager();
+        $post = $postManager->findById($postId);
+        if ($post === null) {
+            throw new NotfoundPageException();
+        }
+
+
+        $userManager = new UserManager();
+        $listUsers = $userManager->findAllUser();
+
+        if (!empty($this->request->post('title') && $this->request->post('resume') && $this->request->post('content'))) {
+            $postManager->updatePost(
+               $postId,
+                $this->request->post('title'),
+                $this->request->post('resume', 'Mon résumé'),
+                $this->request->post('content'),
+                $this->request->post('authorId'));
+
+            $this->redirectTo('editPost.html?postId='.$postId);
+        }
+
+        $postView = new View('/backViews/editPost');
+        $postView->renderView(['post' => $post, 'listUsers' => $listUsers]);
+    }
+
+    public function showDetailComment()
+    {
+        $this->session->checkAdminAutorisation();
+        $commentId = $this->request->get('commentId');
+        if ($commentId === null) {
+            throw new NotfoundPageException();
+        }
+        $commentManager = new CommentManager();
+        $comment = $commentManager->findById($commentId);
+        if ($comment === null) {
+            throw new NotfoundPageException();
+        }
+        $view = new View('/backViews/commentDetail');
+        $view->renderView(['comment' => $comment]);
     }
 
     public function addComment($comment, $postId)
@@ -107,8 +135,8 @@ class BlogController
             $commentManager = new CommentManager();
             $user = $session->checkAuth();
             $userId = $user->getId();
-            $dataComment = array_merge(['userId' => $userId, 'postId' => $postId], $comment);
-            $commentManager->AddCommentFromOnePostId($dataComment);
+
+            $commentManager->AddCommentFromOnePostId($userId, $postId, $comment);
 
 
         }
@@ -122,26 +150,35 @@ class BlogController
     public function switchStatusOfComment()
     {
 
-        $session = new Session();
-        $session->checkAdminAutorisation();
-        $commentId = $_GET['id'] ?? false;
-        $commentStatus = $_POST['commentStatus'] ?? false;
+        $this->session->checkAdminAutorisation();
+        $commentId = $this->request->get('id') ?? false;
+        $commentStatus = $this->request->post('commentStatus') ?? false;
         if ($commentId && $commentStatus) {
             $commentManager = new CommentManager();
             $commentManager->switchStatus($commentId, $commentStatus);
-            Router::redirectToBackOff();
+            $this->redirectTo('backOffice.html');
         }
     }
 
     public function deleteComment()
     {
-        $session = new Session();
-        $session->checkAdminAutorisation();
+
+        $this->session->checkAdminAutorisation();
         $commentManager = new CommentManager();
-        if (isset($_GET['commentId'])) if (!empty($_GET['commentId'])) {
-            $commentId = $_GET['commentId'];
+        if (!empty($this->request->get('commentId'))) {
+            $commentId = $this->request->get('commentId');
             $commentManager->deleteComment($commentId);
-            Router::redirectToBackOff();
+            $this->redirectTo('backOffice.html');
         }
+    }
+
+    public function switchAuthorOfPost()
+    {
+        $this->session->checkAdminAutorisation();
+        var_dump($_POST);
+        die();
+
+        var_dump($authorId);
+        die();
     }
 }

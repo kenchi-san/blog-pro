@@ -7,7 +7,7 @@
 
             <div class="alert alert-danger" role="alert" style="margin-left: 30%;
     margin-right: 30%;text-align: center; margin-top: 2%">
-                <?= clean($error); ?>
+                <?= $error; ?>
             </div>
         <?php
         }

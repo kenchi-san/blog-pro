@@ -148,7 +148,7 @@ class ExperienceEntity
     /**
      * @param mixed $updated_at
      */
-    public function setUpdatedAt($updated_at): void
+    public function setUpdatedAt($updated_at):void
     {
         $this->updated_at = $updated_at;
     }

@@ -8,8 +8,8 @@ Autoloader::run();
 Config::initGlobals();
 
 //
-$request = $_GET['action'] ?? 'homePage.html' ;
-$router = new Router($request);
+$action = $_GET['action'] ?? 'homePage.html' ;
+$router = new Router($action);
 $router->renderController();
 
 

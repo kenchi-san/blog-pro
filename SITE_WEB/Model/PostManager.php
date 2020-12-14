@@ -48,9 +48,9 @@ class PostManager extends Manager
         INNER JOIN user u on p.user_id = u.id WHERE p.id= :id";
         $req = $this->bdd->prepare($query);
         $req->execute(array('id' => $id));
-        $posts = [];
-        while ($row = $req->fetch(PDO::FETCH_ASSOC)) {
+        $row = $req->fetch(PDO::FETCH_ASSOC);
 
+        if($row){
             $post = new PostEntity();
             $post->hydrate($row);
             $post->setId($row['post_id']);
@@ -60,33 +60,22 @@ class PostManager extends Manager
             $user->setFirstname($row['firstname']);
             $user->setUsername($row['username']);
             $post->setUser($user);
+            return $post;
+        }
 
-            $posts[] = $post; // tableau d'objet
-        };
-        return $posts;
     }
 
-    /**
-     * @param $dataForm
-     * @param $id
-     * @return PostEntity[]
-     */
-    public function updatePost($dataForm, $id): array
+    public function updatePost($id, $title, $resume, $content,$user_id): bool
     {
-        $post = new PostEntity();
-        $newDate = $post->getUpdatedAt();
-        $data = array_merge($dataForm, ['updated_at' => $newDate, 'id' => $id]);
-        $req = $this->bdd->prepare('UPDATE post SET title = :nvtitle, resume= :nvresume, content = :nvcontent, updated_at =:update_date WHERE id=:id');
-        $result = $req->execute([
-            'id' => $data['id'],
-            'nvtitle' => $data['title'],
-            'nvresume' => $data['resume'],
-            'nvcontent' => $data['content'],
-            'update_date' => $data['updated_at']
-//
+        $req = $this->bdd->prepare('UPDATE post SET title = :nvtitle, resume= :nvresume, content = :nvcontent, updated_at =:update_date,user_id=:user_id WHERE id=:id');
+        return $req->execute([
+            'id' => $id,
+            'nvtitle' => $title,
+            'nvresume' => $resume,
+            'nvcontent' => $content,
+            'update_date' => date('Y-m-d H:i:s'),
+            'user_id' =>$user_id
         ]);
-        $posts[] = $result;
-        return $posts;
     }
 
     public function deletePost($id)
@@ -97,14 +86,14 @@ class PostManager extends Manager
         return $result;
     }
 
-    public function addPost($dataPost)
+    public function addPost($user_id,$title,$resume,$content)
     {
         $query = "INSERT INTO post (user_id,title,resume,content) VALUES (:user_id, :title,:resume, :content)";
         $req = $this->bdd->prepare($query);
-        $req->bindParam(':title', $dataPost['0']['title']);
-        $req->bindParam(':resume', $dataPost['0']['resume']);
-        $req->bindParam(':content', $dataPost['0']['content']);
-        $req->bindParam(':user_id', $dataPost['0']['user_id']);
+        $req->bindParam(':title', $title);
+        $req->bindParam(':resume', $resume);
+        $req->bindParam(':content', $content);
+        $req->bindParam(':user_id', $user_id);
 
         $result = $req->execute();
         return $result;

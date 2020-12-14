@@ -10,32 +10,33 @@
 <div id="blog" class="container pt-5">
 
     <div class="row block-blog">
-        <?php foreach ($posts as $post) { ?>
+
             <h2 class="text-center">
-                <?= $post->getTitle() ?>
+
+                <?=
+                $post->getTitle(); ?>
             </h2>
             <p>
-                <?= $post->getResume() ?>
+                <?= $post->getResume(); ?>
             </p>
 
 
             <p>
-                <?php echo $post->getContent() ?>
+                <?= $post->getContent() ?>
             </p>
             <div class="row pl-5 pb-2">
                 créé le <?php $date = $post->getcreatedAt();
                 $dt = DateTime::createFromFormat('Y-m-d H:i:s', $date);
                 echo $dt->format('d/m/Y');
                 ?>
-                par <?php echo $post->getUser()->getFirstname() ?>
+                par <?php echo $post->getUser()->getUsername() ?>
             </div>
 
 
-        <?php } ?>
     </div>
 
     <?php foreach ($comments as $comment) {
-        if ($comment->getPostId() == $post->getId()) {
+        if ($comment->getPostId() == $_GET['postId']) {
             ?>
             <?php if ($comment->getcommentStatusId() == 2) { ?>
                 <div class="row comment-block">
@@ -71,8 +72,9 @@
             <div class="row">
 
                 <div class="col-sm-8 offset-sm-1">
-                <textarea name="content" class="editor" placeholder="Votre commentaire">
-                        </textarea>
+                <label for="comment">Votre commentaire:</label>
+                    <textarea name="content" id="comment" placeholder="Votre commentaire" style="width: 100%; height: 6rem;">
+                </textarea>
                 </div>
             </div>
             <div class="col-sm-8 offset-sm-1">

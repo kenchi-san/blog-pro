@@ -6,13 +6,13 @@ namespace App\Controller;
 use App\Classes\View;
 use App\Model\ExperienceManager;
 
-class HomeController
+class HomeController extends AbstractController
 {
 
     public function showHome()
     {
         $experienceManager = new ExperienceManager();
-        $experience = $experienceManager->findExperiences();
+        $experience = $experienceManager->findAllExperiences();
         $homeView = new View('/frontViews/homePage');
         $homeView->renderView(array('experiences' => $experience));
 
@@ -27,16 +27,20 @@ class HomeController
 
         if ($_POST != null) {
             $errors = [];
-            if (!isset($_POST['name']) || empty($_POST['name'])) {
+            $name =$this->request->post('name');
+            $mail = $this->request->post('email');
+            $phone = $this->request->post('phone');
+            $message = $this->request->post('message');
+            if (!isset($name) || empty($name)) {
                 $errors[] = 'Veuillez indiquer un nom';
             }
-            if (!isset($_POST['email']) || empty($_POST['email'])) {
+            if (!isset($mail) || empty($mail)) {
                 $errors[] = 'veuillez indiquer un mail';
             }
-            if (!isset($_POST['phone']) || empty($_POST['phone'])) {
+            if (!isset($phone) || empty($phone)) {
                 $errors[] = 'veuillez indiquer un numéro de téléphone';
             }
-            if (!isset($_POST['message']) || empty($_POST['message'])) {
+            if (!isset($message) || empty($message)) {
                 $errors[] = 'Votre message ne contient rien';
             }
 

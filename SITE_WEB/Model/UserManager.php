@@ -4,12 +4,14 @@
 namespace Model;
 
 
+use App\Model\HydratorTrait;
 use App\Model\Manager;
+use Model\Entities\UserEntity;
 use PDO;
 
 class UserManager extends Manager
 {
-
+    use HydratorTrait;
 
     /**
      * @param string $mail
@@ -72,27 +74,22 @@ class UserManager extends Manager
      */
     public function findUserFormCredentials(string $login, string $password)
     {
-        if ($login) {
-
-            $query = "SELECT u.id ,u.email,u.firstname,u.username,u.user_status_id,u.name,u.password,u.create_time FROM user u
+        $query = "SELECT u.id ,u.email,u.firstname,u.username,u.user_status_id,u.name,u.password,u.create_time FROM user u
 INNER JOIN user_status us on u.user_status_id = us.id 
 WHERE username = :username ";
-            $req = $this->bdd->prepare($query);
-            $req->execute(array('username' => $login));
-            $result = $req->fetch(PDO::FETCH_ASSOC);
-            $req->closeCursor();
+        $req = $this->bdd->prepare($query);
+        $req->execute(array('username' => $login));
+        $result = $req->fetch(PDO::FETCH_ASSOC);
+        $req->closeCursor();
 
 
-            if ($result['username'] === $login) {
-                if (password_verify($password, $result['password'])) {
+        if ($result['username'] === $login) {
+            if (password_verify($password, $result['password'])) {
 
-                    return $result;
-
-                }
+                return $result;
             }
-            return false;
         }
-        return true;
+        return false;
     }
 
     public function checkUserToTheBdd($username, $email)
@@ -142,18 +139,45 @@ WHERE username = :username ";
         return $result;
     }
 
-    public function newUser(array $dataUser)
+    public function newUser($username, $name, $firstname, $mail, $password)
     {
 
         $req = $this->bdd->prepare("INSERT INTO user (username, name, firstname, email, password) VALUES (:username, :name, :firstname, :email, :password)");
-        $req->bindParam('name', $dataUser['name']);
-        $req->bindParam('username', $dataUser['username']);
-        $req->bindParam('firstname', $dataUser['firstname']);
-        $req->bindParam('email', $dataUser['email']);
-        $req->bindParam('password', $dataUser['password']);
+        $req->bindParam('name', $name);
+        $req->bindParam('username', $username);
+        $req->bindParam('firstname', $firstname);
+        $req->bindParam('email', $mail);
+        $req->bindParam('password', $password);
         $req->execute();
         return $req;
 
+    }
+
+    public function findAllUser()
+    {
+        $query = "SELECT * FROM user";
+        $req = $this->bdd->prepare($query);
+        $req->execute();
+        $users = [];
+        while ($row = $req->fetch(PDO::FETCH_ASSOC)) {
+
+            $user = new UserEntity();
+
+            $user->hydrate($row);
+
+
+            $users[] = $user; // tableau d'objet
+        };
+        return $users;
+    }
+
+    public function updateTheStatusOfUser($userId, $user_status_id)
+    {
+        $req = $this->bdd->prepare('UPDATE user SET user_status_id=:nvuser_status_id WHERE id=:id');
+        return $req->execute([
+            'id' => $userId,
+            'nvuser_status_id' => $user_status_id
+        ]);
     }
 
 

@@ -10,6 +10,9 @@ class UserEntity
 {
     use HydratorTrait;
 
+    const STATUS_BANN = '3';
+    const STATUS_ADMIN = '1';
+    const STATUS_MEMBER = '2';
     private $id;
     private $username;
     private $name;
@@ -18,6 +21,12 @@ class UserEntity
     private $password;
     private $create_time;
     private $user_status_id;
+
+
+//    public function __construct()
+//    {
+//        $this->user_status_id;
+//    }
 
     /**
      * @return mixed
@@ -136,6 +145,15 @@ class UserEntity
      */
     public function getUserStatusId()
     {
+//        if ($this->user_status_id == '1') {
+//            return $this->user_status_id = 'Admin';
+//        }
+//        if ($this->user_status_id == '2') {
+//            return $this->user_status_id = 'Membre';
+//        }
+//        if ($this->user_status_id == '3') {
+//            return $this->user_status_id = 'Banni';
+//        }
         return $this->user_status_id;
     }
 

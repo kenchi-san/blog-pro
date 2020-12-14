@@ -4,25 +4,25 @@
 namespace App\Controller;
 
 
-use App\Classes\Session;
 use App\Classes\View;
 use App\Model\CommentManager;
 use App\Model\ExperienceManager;
 use App\Model\PostManager;
 
-class BackController
+class BackController extends AbstractController
 {
 
 
     public function dashboardAdmin()
     {
-        $session = new Session();
-        $session->checkAdminAutorisation();
+        $this->session->checkAdminAutorisation();
         $experienceManager = new ExperienceManager();
         $postManager = new PostManager();
         $commentManager = new  CommentManager();
-        $experiences = $experienceManager->findExperiences();
-        $posts = $postManager->findAll();
+
+
+        $experiences = $experienceManager->findAllExperiences();
+        $posts =$postManager->findAll();
         $comments = $commentManager->findAllComments();
 
 

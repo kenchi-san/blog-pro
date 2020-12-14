@@ -19,9 +19,10 @@
                 <a href="<?= HOST . 'showExperience.html?experienceId=' . $this->clean($experience->getId()); ?>"><?= $this->clean($experience->getTitle()); ?></a>
             </td>
             <?php if (!empty($experience->getUpdatedAt())) { ?>
-                <td> modifier le :<?php $date = $experience->getUpdatedAt;
+                <td> modifier le :<?php
+                    $date = $experience->getUpdatedAt();
                     $dt = DateTime::createFromFormat('Y-m-d H:i:s', $date);
-                    echo $this->clean($dt->format('d/m/Y'));
+                    echo $dt->format('d/m/Y');
                     ?></td>
             <?php } else { ?>
 
@@ -80,7 +81,7 @@
 
     <thead>
     <tr>
-        <th><a href="<?= HOST . 'addComment.html' ?>" class="fa fa-plus-square mr-1"></a></th>
+        <td></td>
         <td class="text-center" colspan="4">Les nouveaux commentaires</td>
 
     </tr>
@@ -94,7 +95,7 @@
                     href="<?= HOST . 'deleteComment?commentId=' . $this->clean($comment->getId()); ?>" class="fa fa-trash mr-1"></a>
         </th>
         <td>
-            <a href="<?= HOST . 'detail_post.html?postId=' . $this->clean($comment->getId()); ?>"><?= $this->clean($comment->getUser()->getUsername()); ?></a>
+            <a href="<?= HOST . 'detail_comment.html?commentId=' . $this->clean($comment->getId()); ?>"><?= $this->clean($comment->getUser()->getUsername()); ?></a>
         </td>
 
         <td> Crée le :<?php $date = $comment->getCreatedAt();
@@ -102,8 +103,11 @@
             echo $this->clean($dt->format('d/m/Y'));
             ?>
         </td>
+        <td>
+            <?= $comment->getContent() ?>
+        </td>
         <td>status du commentaire:
-            <form method="post" action="switchCommentStatus.html?id=<?= $comment->getId();?>">
+            <form method="POST" action="switchCommentStatus.html?id=<?= $comment->getId();?>">
                 <select name="commentStatus" >
                 <option value="1" <?= $this->clean(($comment->getStatusName()->getStatus() === "wait" ))? "selected" : "" ?>>En attente</option>
                 <option value="2" <?= $this->clean(($comment->getStatusName()->getStatus() === "validated" ))? "selected" : "" ?>>Validé</option>

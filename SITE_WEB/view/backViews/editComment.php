@@ -22,7 +22,7 @@
                 <tr>
                     <td class="text-center">créé le <?= $date = $comment->getcreatedAt();
                         $dt = DateTime::createFromFormat('Y-m-d H:i:s', $date);
-                        $this->clean($dt->format('d/m/Y'));
+                        $dt->format('d/m/Y');
                         ?>
                 </tr>
                 </tbody>

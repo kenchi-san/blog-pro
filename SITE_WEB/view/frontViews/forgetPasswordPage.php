@@ -12,9 +12,9 @@
                             foreach ($errors as $error) {?>
 
                                 <div class="alert alert-danger" role="alert">
-                                    <?=$this->clean($error);?>
+                                    <?= $error;?>
                                 </div>;
-                            <?php}
+                            <?php }
                         }?>
                         <div class="panel-body">
 
