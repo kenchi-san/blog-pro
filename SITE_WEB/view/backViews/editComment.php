@@ -13,7 +13,7 @@
                 <tr>
                     <td class="text-center rowspan='2'">
          <textarea name="content" class="editor">
-            <?= $this->clean($comment->getcontent()); ?>
+            <?= $comment->getcontent(); ?>
         </textarea>
                         <p><input type="submit" value="Submit"></p></td>
 

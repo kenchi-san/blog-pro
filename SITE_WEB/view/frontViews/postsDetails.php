@@ -1,5 +1,5 @@
 <?php if ($auth = $session->isUserAuthenticated()) {
-    if ($auth->getUserStatusId() == 1) { ?>
+    if ($auth->getUserStatusId() == \Model\Entities\UserEntity::STATUS_ADMIN) { ?>
         <a class="btn btn-primary" href="<?= HOST . 'backOffice.html' ?>" role="button">retour au
             back office</a>
 
@@ -13,8 +13,7 @@
 
             <h2 class="text-center">
 
-                <?=
-                $post->getTitle(); ?>
+                <?= $post->getTitle(); ?>
             </h2>
             <p>
                 <?= $post->getResume(); ?>
@@ -38,26 +37,26 @@
     <?php foreach ($comments as $comment) {
         if ($comment->getPostId() == $_GET['postId']) {
             ?>
-            <?php if ($comment->getcommentStatusId() == 2) { ?>
+            <?php if ($comment->getcommentStatusId() == \App\Model\Entities\CommentEntity::STATUS_VALIDATED) { ?>
                 <div class="row comment-block">
                     <div class="col-ms-12 col-md-12 col-lg-12">
-                        <h3>Publié par: <?php echo $comment->getUser()->getUsername(); ?></h3>
+                        <h3>Publié par: <?= $comment->getUser()->getUsername(); ?></h3>
                         <small>date de création: <?php $date = $comment->getcreatedAt();
                             $dt = DateTime::createFromFormat('Y-m-d H:i:s', $date);
                             echo $dt->format('d/m/Y');
                             ?></small>
                     </div>
                     <div class="col-ms-12 col-md-12 col-lg-12">
-                        <?php echo $comment->getContent(); ?>
+                        <?php echo $comment->getContent();?>
                     </div>
                 </div>
             <?php }
-            if ($comment->getcommentStatusId() == 3) { ?>
+            if ($comment->getcommentStatusId() == \App\Model\Entities\CommentEntity::STATUS_BANN) { ?>
                 <div class="alert alert-danger" role="alert">
                     Le commentaire a été banni.
                 </div>
             <?php }
-            if ($comment->getcommentStatusId() == 1) { ?>
+            if ($comment->getcommentStatusId() == \App\Model\Entities\CommentEntity::STATUS_WAIT) { ?>
                 <div class="alert alert-warning" role="alert">
                     Le commentaire est en cours de validation.
                 </div>

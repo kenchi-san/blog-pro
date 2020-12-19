@@ -35,7 +35,7 @@
     </form>
     <p>Créé le <?php $date = $post->getcreatedAt();
         $dt = DateTime::createFromFormat('Y-m-d H:i:s', $date);
-        echo $this->clean($dt->format('d/m/Y'));
+        echo $dt->format('d/m/Y');
         ?>
     </p>
 </div>

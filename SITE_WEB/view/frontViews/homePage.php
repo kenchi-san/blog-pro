@@ -27,7 +27,7 @@
 
                     <div class="row">
                         <div class="col-sm-6 order-sm-2">
-                            <img class="w-100" alt="<?= $this->clean($experience->getImg());  ?>" src="<?= IMG.$experience->getImg();  ?>">
+                            <img class="w-100" alt="<?= $experience->getImg();  ?>" src="<?= VIEW_IMG.$experience->getImg();  ?>">
                         </div>
                         <div class="col-sm-6 order-sm-1">
                             <div class="mt-5">
@@ -46,7 +46,7 @@
                 } else { ?>
                     <div class="row">
                         <div class="col-sm-6 order-sm-1 ">
-                            <img class="w-100" alt="<?= $this->clean($experience->getImg());  ?>" src="<?= IMG.$experience->getImg();  ?>">
+                            <img class="w-100" alt="<?= $experience->getImg(); ?>" src="<?= VIEW_IMG.$experience->getImg()?>">
                         </div>
                         <div class="col-sm-6 order-sm-2">
                             <div class="mt-5">

@@ -17,7 +17,7 @@
 
                 <div class="col-md-12">
                     <label for="username"></label>
-                    <input type="text" id="username" name="username" autocomplete="username" placeholder="username">
+                    <input type="text" id="username" name="username" placeholder="username">
 
 
                     <label for="name"></label>

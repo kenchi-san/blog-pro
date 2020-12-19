@@ -10,13 +10,13 @@
     <tbody>
     <?php foreach ($experiences as $experience) { ?>
         <tr>
-            <td scope="row"><a href="<?= HOST . 'editExperience.html?experienceId=' . $this->clean($experience->getId()); ?>"
+            <td scope="row"><a href="<?= HOST . 'editExperience.html?experienceId=' . $experience->getId(); ?>"
                                class="fa fa-pencil mr-1"></a>
-                <a href="<?= HOST . 'deleteExperience?experienceId=' . $this->clean($experience->getId()); ?>"
+                <a href="<?= HOST . 'deleteExperience?experienceId=' . $experience->getId(); ?>"
                    class="fa fa-trash mr-1"></a>
             </td>
             <td>
-                <a href="<?= HOST . 'showExperience.html?experienceId=' . $this->clean($experience->getId()); ?>"><?= $this->clean($experience->getTitle()); ?></a>
+                <a href="<?= HOST . 'showExperience.html?experienceId=' . $experience->getId(); ?>"><?= $experience->getTitle(); ?></a>
             </td>
             <?php if (!empty($experience->getUpdatedAt())) { ?>
                 <td> modifier le :<?php
@@ -28,7 +28,7 @@
 
                 <td>créer le :<?php $date = $experience->getCreatedAt();
                     $dt = DateTime::createFromFormat('Y-m-d H:i:s', $date);
-                    echo $this->clean($dt->format('d/m/Y')); ?>
+                    echo $dt->format('d/m/Y'); ?>
                 </td>
             <?php } ?>
         </tr>
@@ -50,22 +50,22 @@
     <tbody>
     <?php foreach ($posts as $post) { ?>
         <tr>
-            <th scope="row"><a href="<?= HOST . 'editPost.html?postId=' . $this->clean($post->getId()); ?>"
+            <th scope="row"><a href="<?= HOST . 'editPost.html?postId=' . $post->getId(); ?>"
                                class="fa fa-pencil mr-1"></a><a
-                        href="<?= HOST . 'deletePost?postId=' . $this->clean($post->getId()); ?>" class="fa fa-trash mr-1"></a></th>
-            <td><a href="<?= HOST . 'detail_post.html?postId=' . $this->clean($post->getId()); ?>"><?= $this->clean($post->getTitle()); ?></a>
+                        href="<?= HOST . 'deletePost?postId=' . $post->getId(); ?>" class="fa fa-trash mr-1"></a></th>
+            <td><a href="<?= HOST . 'detail_post.html?postId=' . $post->getId(); ?>"><?= $post->getTitle(); ?></a>
             </td>
 
             <?php if (!empty($post->getUpdatedAt())) { ?>
                 <td> modifier le :<?php $date = $post->getUpdatedAt();
                     $dt = DateTime::createFromFormat('Y-m-d H:i:s', $date);
-                    echo $this->clean($dt->format('d/m/Y'));
+                    echo $dt->format('d/m/Y');
                     ?></td>
             <?php } else { ?>
 
                 <td>créer le :<?php $date = $post->getcreatedAt();
                     $dt = DateTime::createFromFormat('Y-m-d H:i:s', $date);
-                    echo $this->clean($dt->format('d/m/Y')); ?>
+                    echo $dt->format('d/m/Y'); ?>
                 </td>
             <?php } ?>
 
@@ -90,17 +90,17 @@
 
     <?php foreach ($comments as $comment) { ?>
     <tr>
-        <th scope="row"><a href="<?= HOST . 'editComment.html?commentId=' . $this->clean($comment->getId()); ?>"
+        <th scope="row"><a href="<?= HOST . 'editComment.html?commentId=' . $comment->getId(); ?>"
                            class="fa fa-pencil mr-1"></a><a
-                    href="<?= HOST . 'deleteComment?commentId=' . $this->clean($comment->getId()); ?>" class="fa fa-trash mr-1"></a>
+                    href="<?= HOST . 'deleteComment?commentId=' . $comment->getId(); ?>" class="fa fa-trash mr-1"></a>
         </th>
         <td>
-            <a href="<?= HOST . 'detail_comment.html?commentId=' . $this->clean($comment->getId()); ?>"><?= $this->clean($comment->getUser()->getUsername()); ?></a>
+            <a href="<?= HOST . 'detail_comment.html?commentId=' . $comment->getId(); ?>"><?= $comment->getUser()->getUsername(); ?></a>
         </td>
 
         <td> Crée le :<?php $date = $comment->getCreatedAt();
             $dt = DateTime::createFromFormat('Y-m-d H:i:s', $date);
-            echo $this->clean($dt->format('d/m/Y'));
+            echo $dt->format('d/m/Y');
             ?>
         </td>
         <td>
@@ -109,9 +109,9 @@
         <td>status du commentaire:
             <form method="POST" action="switchCommentStatus.html?id=<?= $comment->getId();?>">
                 <select name="commentStatus" >
-                <option value="1" <?= $this->clean(($comment->getStatusName()->getStatus() === "wait" ))? "selected" : "" ?>>En attente</option>
-                <option value="2" <?= $this->clean(($comment->getStatusName()->getStatus() === "validated" ))? "selected" : "" ?>>Validé</option>
-                <option value="3" <?= $this->clean(($comment->getStatusName()->getStatus() === "ban" ))? "selected" : "" ?>>Banni</option>
+                <option value="<?= \App\Model\Entities\CommentEntity::STATUS_WAIT ?>"<?= ($comment->getStatusName()->getStatus() === "wait" )? "selected" : "" ?>>En attente</option>
+                <option value="<?= \App\Model\Entities\CommentEntity::STATUS_VALIDATED ?>"<?= ($comment->getStatusName()->getStatus() === "validated" )? "selected" : "" ?>>Validé</option>
+                <option value="<?= \App\Model\Entities\CommentEntity::STATUS_BANN?>" <?= ($comment->getStatusName()->getStatus() === "ban" )? "selected" : "" ?>>Banni</option>
             </select><input type="submit" value="Valider">
             </form>
         </td>

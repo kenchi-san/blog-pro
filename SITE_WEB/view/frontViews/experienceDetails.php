@@ -24,7 +24,7 @@
                 <tr>
                     <td class="text-center rowspan='3'"><?= $experience->getDescription(); ?></td>
                     <td class=" text-center"><img class="img-thumbnails" alt="<?= $experience->getImg(); ?>"
-                                                  src="<?= $this->clean(IMG.$experience->getImg()); ?>"></td>
+                                                  src="<?= IMG.$experience->getImg(); ?>"></td>
 
                 </tr>
                 <tr>

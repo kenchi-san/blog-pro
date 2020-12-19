@@ -145,22 +145,13 @@ class UserEntity
      */
     public function getUserStatusId()
     {
-//        if ($this->user_status_id == '1') {
-//            return $this->user_status_id = 'Admin';
-//        }
-//        if ($this->user_status_id == '2') {
-//            return $this->user_status_id = 'Membre';
-//        }
-//        if ($this->user_status_id == '3') {
-//            return $this->user_status_id = 'Banni';
-//        }
         return $this->user_status_id;
     }
 
     /**
      * @param mixed $user_status_id
      */
-    public function setUserStatusId($user_status_id = 2)
+    public function setUserStatusId($user_status_id = UserEntity::STATUS_MEMBER)
     {
         $this->user_status_id = $user_status_id;
     }

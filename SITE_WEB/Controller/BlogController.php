@@ -4,7 +4,6 @@
 namespace App\Controller;
 
 
-use App\Classes\Router;
 use App\Classes\Session;
 use App\Classes\View;
 use App\Exception\NotfoundPageException;
@@ -128,33 +127,34 @@ class BlogController extends AbstractController
         $view->renderView(['comment' => $comment]);
     }
 
-    public function addComment($comment, $postId)
+    public function addComment($content, $postId)
     {
-        if ($_POST) {
-            $session = new Session();
+
+        if ($this->request->post('content') && $this->request->get('postId')) {
+
+            $user = $this->session->checkAuth();
             $commentManager = new CommentManager();
-            $user = $session->checkAuth();
-            $userId = $user->getId();
-
-            $commentManager->AddCommentFromOnePostId($userId, $postId, $comment);
+           $userId = $user->getId();
+            $commentManager->addCommentFromOnePostId($userId, $this->request->get('postId'), $this->request->post('content'));
 
 
+        }else{
+            throw new NotfoundPageException();
         }
     }
 
-    public function editComment()
-    {
-
-    }
 
     public function switchStatusOfComment()
     {
 
         $this->session->checkAdminAutorisation();
+
         $commentId = $this->request->get('id') ?? false;
         $commentStatus = $this->request->post('commentStatus') ?? false;
         if ($commentId && $commentStatus) {
+
             $commentManager = new CommentManager();
+
             $commentManager->switchStatus($commentId, $commentStatus);
             $this->redirectTo('backOffice.html');
         }
@@ -172,13 +172,4 @@ class BlogController extends AbstractController
         }
     }
 
-    public function switchAuthorOfPost()
-    {
-        $this->session->checkAdminAutorisation();
-        var_dump($_POST);
-        die();
-
-        var_dump($authorId);
-        die();
-    }
 }

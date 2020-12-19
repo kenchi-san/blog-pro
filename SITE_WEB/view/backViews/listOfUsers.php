@@ -22,13 +22,13 @@
     <?php foreach ($listUsers as $user) { ?>
         <tr>
             <td>
-                <?= $user->getuserName() ?>
+                <?= $user->getuserName(); ?>
             </td>
             <td>
-                <?= $user->getFirstname() ?>
+                <?= $user->getFirstname(); ?>
             </td>
             <td>
-                <?= $user->getName() ?>
+                <?= $user->getName(); ?>
             </td>
             <td>
                 <?php $date = $user->getCreateTime();
@@ -41,10 +41,10 @@
 
                 <form method="POST" action="listOfUsers.html?id=<?= $user->getId();?>">
                     <select name="StatusId">
-                        <option value="1"<?= ($user->getUserStatusId() === "1") ? "selected" : "" ?>>Administrateur
+                        <option value="<?php \Model\Entities\UserEntity::STATUS_ADMIN ?>"<?= $user->getUserStatusId() === \Model\Entities\UserEntity::STATUS_ADMIN ? "selected" : "" ?>>Administrateur
                         </option>
-                        <option value="2"<?= ($user->getUserStatusId() === "2") ? "selected" : "" ?>>Membre</option>
-                        <option value='3'<?= ($user->getUserStatusId() === "3") ? "selected" : "" ?>>Banni</option>
+                        <option value="<?php \Model\Entities\UserEntity::STATUS_MEMBER ?>"<?= $user->getUserStatusId() === \Model\Entities\UserEntity::STATUS_MEMBER ? "selected" : "" ?>>Membre</option>
+                        <option value='<?php \Model\Entities\UserEntity::STATUS_BANN ?>'<?= $user->getUserStatusId() === \Model\Entities\UserEntity::STATUS_BANN ? "selected" : "" ?>>Banni</option>
                     </select>
                     <input type="submit" value="Changer">
                 </form>

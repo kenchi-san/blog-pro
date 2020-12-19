@@ -1,6 +1,3 @@
-<?php //foreach ($experiences as $experience) {
-//    var_dump($experiences);
-//} ?>
 
 <div class="row">
     <table class="shadow table table-hover mr-3 mt-3 ">

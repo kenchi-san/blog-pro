@@ -39,7 +39,7 @@
                     <a class="nav-link" href="<?= HOST . '/public/CV_Hugo_Charon.pdf'; ?>" download="">Télécharger
                         mon CV</a>
                 </li>
-                <?php if (!isset($_SESSION['auth']) || $_SESSION['auth']["user_status_id"] != 1) { ?>
+                <?php if (!isset($_SESSION['auth']) || $_SESSION['auth']["user_status_id"] != \Model\Entities\UserEntity::STATUS_ADMIN) { ?>
 
                     <?php
                 } else { ?>
@@ -98,8 +98,8 @@
         ClassicEditor.create(editorElt);
     }
 
-
 </script>
+
 <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
         integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
         crossorigin="anonymous"></script>

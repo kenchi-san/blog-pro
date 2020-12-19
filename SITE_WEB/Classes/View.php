@@ -14,8 +14,9 @@ class View
         $this->template = $template . ".php";
     }
 
-    public function clean($value){
-        return htmlspecialchars(trim($value));
+    public function clean($value): string
+    {
+        return htmlspecialchars(trim($value), ENT_DISALLOWED);
     }
 
     public function renderView($params = [])

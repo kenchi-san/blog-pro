@@ -88,6 +88,7 @@ class Router
 
     }
 static function redirectToLoginPage(){
+
     $View = new View('/frontViews/loginPage');
     $View->renderView();
 }

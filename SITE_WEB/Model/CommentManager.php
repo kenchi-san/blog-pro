@@ -43,8 +43,9 @@ class CommentManager extends Manager
 
     }
 
-    public function AddCommentFromOnePostId($userId,$postId,$content)
+    public function addCommentFromOnePostId($userId, $postId, $content)
     {
+
         $query = "INSERT INTO comment ( user_id,post_id,content) VALUES (:user_id,:post_id,:content) ";
         $req = $this->bdd->prepare($query);
         $req->bindParam(':content', $content);
