@@ -4,7 +4,6 @@
     <?php
     if (isset($errors)) {
         foreach ($errors as $error) { ?>
-
             <div class="alert alert-danger" role="alert" style="margin-left: 30%;
     margin-right: 30%;text-align: center; margin-top: 2%">
                 <?= $error; ?>
@@ -14,7 +13,7 @@
     } ?>
 
 
-    <form method="post">
+    <form method="post" >
 
         <h3>Me contacter</h3>
         <div class="row">
@@ -34,7 +33,7 @@
             </div>
             <div class="col-md-6">
                 <div class="form-group">
-                    <label for="message"></label>
+                    <label for="message" class="sr-only">Votre message:</label>
                     <textarea id="message" name="message" class="form-control" placeholder="Votre message *"
                                                            style="width: 100%; height: 150px;"></textarea>
                 </div>

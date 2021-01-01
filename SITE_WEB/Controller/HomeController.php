@@ -3,6 +3,8 @@
 namespace App\Controller;
 
 
+use App\Classes\Mailer\Mailing;
+use App\Classes\Router;
 use App\Classes\View;
 use App\Model\ExperienceManager;
 
@@ -24,41 +26,51 @@ class HomeController extends AbstractController
 
         $contactView = new View('/frontViews/contactPage');
 
+        $name = htmlspecialchars(trim($this->request->post('name')));
+        $mail = htmlspecialchars(trim($this->request->post('email')));
+        $phone = htmlspecialchars(trim($this->request->post('phone')));
+        $message = htmlspecialchars(trim($this->request->post('message')));
+        $errors = [];
 
-        if ($_POST != null) {
-            $errors = [];
-            $name =$this->request->post('name');
-            $mail = $this->request->post('email');
-            $phone = $this->request->post('phone');
-            $message = $this->request->post('message');
-            if (!isset($name) || empty($name)) {
+        if ($this->request->isPost()) {
+
+            if (empty($name)) {
+
                 $errors[] = 'Veuillez indiquer un nom';
             }
-            if (!isset($mail) || empty($mail)) {
+
+            if (empty($mail)) {
                 $errors[] = 'veuillez indiquer un mail';
             }
-            if (!isset($phone) || empty($phone)) {
+
+            if (empty($phone)) {
                 $errors[] = 'veuillez indiquer un numéro de téléphone';
             }
-            if (!isset($message) || empty($message)) {
+
+            if (empty($message)) {
                 $errors[] = 'Votre message ne contient rien';
             }
 
             if (count($errors)) {
-                $contactView->renderView(array('errors' => $errors));
 
+                return $contactView->renderView(array('errors' => $errors));
             }
+
+            $this->sendTheContactMail($name,$mail, $phone, $message);
 
         }
         $contactView->renderView();
     }
 
 
-    public function test()
+    public function sendTheContactMail($name, $mail,$phone, $message)
     {
-        $imageView = new View('/frontViews/test');
-        $imageView->renderView();
-    }
 
+
+
+        $mailView = new View('/mail/contact');
+        $mailView->renderView(['name' => $name, 'mail'=>$mail,'phone' => $phone, 'message' => $message]);
+
+    }
 
 }
