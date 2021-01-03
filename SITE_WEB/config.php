@@ -17,7 +17,6 @@ class Config
         define('ASSERT', HOST.'/public/css');
         define('IMG',HOST.'public/img/');
         define('VIEW', __DIR__.'/view') ;
-        define('PATH_MAIL',__DIR__.'/Classes/Mailer');
         define('DL_IMG', __DIR__.'/public/uploadImg/') ;
         define('VIEW_IMG',HOST.'public/uploadImg/');
     }

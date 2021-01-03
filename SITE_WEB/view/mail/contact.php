@@ -5,14 +5,14 @@
 
 </head>
 <body>
-Mail de la personne: <?= $mail ?>
+Mail de la personne: <?= $mail;?>
 <br>
-Personne:  <?= $name ?>
+Personne:  <?= $name; ?>
 <br>
-Numéro de téléphone: <?= $phone ?>
+Numéro de téléphone: <?= $phone; ?>
 <br>
 La demande:<br>
-<?= $message ?>
+<?= $message; ?>
 
 </body>
 </html>

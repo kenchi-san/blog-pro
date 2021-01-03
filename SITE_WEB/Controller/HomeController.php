@@ -27,7 +27,7 @@ class HomeController extends AbstractController
         $contactView = new View('/frontViews/contactPage');
 
         $name = htmlspecialchars(trim($this->request->post('name')));
-        $mail = htmlspecialchars(trim($this->request->post('email')));
+        $email = htmlspecialchars(trim($this->request->post('email')));
         $phone = htmlspecialchars(trim($this->request->post('phone')));
         $message = htmlspecialchars(trim($this->request->post('message')));
         $errors = [];
@@ -39,7 +39,7 @@ class HomeController extends AbstractController
                 $errors[] = 'Veuillez indiquer un nom';
             }
 
-            if (empty($mail)) {
+            if (empty($email)) {
                 $errors[] = 'veuillez indiquer un mail';
             }
 
@@ -56,21 +56,19 @@ class HomeController extends AbstractController
                 return $contactView->renderView(array('errors' => $errors));
             }
 
-            $this->sendTheContactMail($name,$mail, $phone, $message);
+            $this->sendTheContactMail($name,$email, $phone, $message);
 
         }
         $contactView->renderView();
     }
 
 
-    public function sendTheContactMail($name, $mail,$phone, $message)
+    public function sendTheContactMail($name, $email,$phone, $message)
     {
-
-
-
+        $mail = new Mailing();
         $mailView = new View('/mail/contact');
-        $mailView->renderView(['name' => $name, 'mail'=>$mail,'phone' => $phone, 'message' => $message]);
-
+        $contentMail=$mailView->renderView(['name' => $name, 'mail'=>$email,'phone' => $phone, 'message' => $message]);
+        $mail->sendTheMailFromContactForm($contentMail);
     }
 
 }
