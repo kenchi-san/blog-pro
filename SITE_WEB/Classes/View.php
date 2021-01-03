@@ -2,13 +2,10 @@
 
 namespace App\Classes;
 
-use App\Classes\Mailer\Mailing;
-
 class View
 {
     const FRONT_GABARIT = "/frontViews/gabarit.php";
     const BACK_GARARIT = "/backViews/gabarit.php";
-    const MAIL_CONTACT = "/Mailing.php";
 
     private $template;
 
@@ -25,7 +22,6 @@ class View
     public function renderView($params = [])
     {
         $session = new Session();
-
         $template = explode("/", $this->template, 3);
 
         extract($params);
@@ -40,9 +36,7 @@ class View
                 include_once(VIEW . self::BACK_GARARIT);
                 break;
             case "mail":
-                include_once (PATH_MAIL.self::MAIL_CONTACT);
-                $mail = new Mailing();
-                $mail->sendTheMailFromContactForm($contentPage);
+                return $contentPage;
                 break;
             default:
                 throw  new \LogicException();

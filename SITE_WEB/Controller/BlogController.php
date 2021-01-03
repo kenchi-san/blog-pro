@@ -52,7 +52,7 @@ class BlogController extends AbstractController
         $postView = new View('/backViews/addPost');
 
 
-        if (!empty($this->request->post('title')) && !empty($this->request->post('resume')) && !empty($this->request->post('content'))) {
+        if ($this->request->isPost()) {
             $user = $user_id->getId();
             $title = $this->request->post('title');
             $resume = $this->request->post('resume');

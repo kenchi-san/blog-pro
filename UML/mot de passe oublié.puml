@@ -1,0 +1,40 @@
+@startuml
+title Sequence : Mot de passe oublié
+actor Utilisateur as U
+
+participant Application as A
+participant SGBD as bdd
+
+
+U->A : Mot de passe oublié(Mail)
+activate A
+A->bdd:recherche de l'utilisateur
+activate bdd
+alt ustilisateur exist
+    bdd-->A:utilisateur trouvé
+     deactivate bdd
+    A-->U: envoie d'un lien avec un token
+
+    else utilisateur non trouvé
+
+    A-->U: Adresse introuvable
+    deactivate A
+end
+alt token valide
+    U->A: changement de mot de passe
+    activate A
+    A->A: pwd 1 et pwd 2 ok
+    A->bdd: Requete Update bdd
+       activate bdd
+       bdd-->A: ok
+   deactivate bdd
+    A-->U: redirection sur la page de conection
+    deactivate bdd
+ else token invalide
+    U->A: page non trouvé
+    deactivate A
+end
+
+
+
+@enduml

@@ -12,7 +12,8 @@
                 <tbody>
                 <tr>
                     <td class="text-center">
-                        <input type="text" name="title">
+                        <label for="labelTitleAdd" class="sr-only">Titre</label>
+                        <input id="labelTitleAdd" type="text" name="title">
                     </td>
                     <td><label for="fichier_a_uploader" title="Recherchez le fichier à uploader !">Envoyer l'image :</label>
                         <input name="img" type="file" id="fichier_a_uploader" /></td>
@@ -21,7 +22,9 @@
                     <td class="text-center rowspan='2'">
          <textarea name="description" class="editor">
         </textarea>
-                        <p><input type="submit" value="Submit"></p>
+                        <p>
+                            <label for="labelSubmit" class="sr-only"></label>
+                            <input id="labelSubmit" type="submit" value="Submit"></p>
                     </td>
 
 

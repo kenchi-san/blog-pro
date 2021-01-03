@@ -52,14 +52,16 @@ class Session
     public function checkAdminAutorisation(): UserEntity
     {
         $user = $this->checkAuth();
-        if ($user && $user->getUserStatusId() === UserEntity::STATUS_ADMIN) {
+        if ($user && (int)$user->getUserStatusId() === UserEntity::STATUS_ADMIN) {
             return $user;
         } else {
 
             throw new ForbiddenAccessException("Vous n'avez pas les droits pour accéder à cette page");
         }
     }
-    public function memberAccess(){
+
+    public function memberAccess()
+    {
         $user = $this->checkAuth();
         if ($user && $user->getUserStatusId() === UserEntity::STATUS_MEMBER) {
             return $user;
@@ -75,10 +77,9 @@ class Session
      */
     public function bannMembers($checkUser = null)
     {
-        if ($checkUser['user_status_id'] === UserEntity::STATUS_BANN) {
+        if ((int)$checkUser['user_status_id'] === UserEntity::STATUS_BANN) {
             throw new ForbiddenAccessException("Vous avez été banni du Site par l'administrateur");
         }
-
     }
 
 

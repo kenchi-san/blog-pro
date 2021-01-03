@@ -11,11 +11,10 @@
                 <tbody>
                 <tr>
                     <td class="text-center">
-                        <label></label>
-                        <input type="text" name="title" value="<?= $experience->getTitle(); ?>">
+                        <label for="labelTitleExperience" class="sr-only">Titre</label>
+                        <input type="text" id="labelTitleExperience" name="title" value="<?= $experience->getTitle(); ?>">
                     </td>
-                    <td><label for="fichier_a_uploader" title="Recherchez le fichier à uploader !">Envoyer l'image
-                            :</label>
+                    <td><label for="fichier_a_uploader" title="Recherchez le fichier à uploader !">Envoyer l'image:</label>
                         <input name="img" type="file" id="fichier_a_uploader"/></td>
 
 

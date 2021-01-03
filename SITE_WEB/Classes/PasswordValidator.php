@@ -4,29 +4,33 @@
 namespace App\Classes;
 
 
-use App\Controller\AbstractController;
-
-class PasswordValidator extends AbstractController
+class PasswordValidator
 {
 
 
-    public function passwordFormToken($user)
+    /**
+     * @param $user || null
+     * @param $password_1
+     * @param $password_2
+     * @return mixed
+     */
+    public function passwordFormToken($user, $password_1, $password_2)
     {
         $view = new View('/frontViews/updatePasswordPage');
 
-        if ($user == false) {
-            return  $view->renderView(['invalidToken' => true]);
+        if ($user == false && !empty($user)) {
+            $view->renderView(['invalidToken' => true]);
         }
-        if ( $this->request->post('password_1') != $this->request->post('password_2')) {
+        if ($password_1 != $password_2) {
 
-           return $view->renderView(['invalidePassword' => true]);
+            $view->renderView(['invalidePassword' => true]);
 
         }
-        if (empty($this->request->post('password_1'))) {
-            return $view->renderView(['invalidePassword2' => true]);
+        if (empty($password_1 || $password_2)) {
+            $view->renderView(['invalidePassword2' => true]);
         }
-
-
-
+        if ($password_1 === $password_2) {
+            return $password_1;
+        }
     }
 }

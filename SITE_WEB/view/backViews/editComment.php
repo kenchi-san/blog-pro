@@ -15,7 +15,9 @@
          <textarea name="content" class="editor">
             <?= $comment->getcontent(); ?>
         </textarea>
-                        <p><input type="submit" value="Submit"></p></td>
+                        <p>
+
+                            <input type="submit" value="Submit"></p></td>
 
 
                 </tr>

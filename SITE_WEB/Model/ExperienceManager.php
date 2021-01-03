@@ -15,7 +15,7 @@ class ExperienceManager extends Manager
     {
 
         /*** accès au model ***/
-        $query = "SELECT * FROM experience";
+        $query = "SELECT * FROM experience ORDER BY created_at DESC ";
         $req = $this->bdd->prepare($query);
         $req->execute();
         $experiences = [];

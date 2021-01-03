@@ -2,19 +2,19 @@
     <h1>Modification du post</h1>
     <form method="post">
         <div class="form-group">
-            <label for="editPostInputTitle">Titre</label>
+            <label for="editPostInputTitle" class="sr-only">Titre</label>
             <input type="text" class="form-control" name="title" id="editPostInputTitle"
                    value="<?= $post->getTitle(); ?>">
         </div>
 
         <div class="form-group">
-            <label for="editPostInputResume"> Résumé </label>
+            <label for="editPostInputResume" class="sr-only"> Résumé </label>
             <textarea name="resume" class="editor form-control" id="editPostInputResume">
              <?= $post->getResume(); ?>
             </textarea>
         </div>
         <div class="form-group">
-            <label for="editPostInputContent"> Contenu </label>
+            <label for="editPostInputContent" class="sr-only"> Contenu </label>
             <textarea name="content" class="form-control editor" id="editPostInputContent">
                     <?= $post->getcontent(); ?>
             </textarea>

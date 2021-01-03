@@ -2,7 +2,6 @@
 
 namespace App\Classes;
 
-use App\Controller\AbstractController;
 use App\Controller\BackController;
 use App\Controller\BlogController;
 use App\Controller\ExperienceController;
@@ -19,7 +18,7 @@ class Router
     private $route = [
         'homePage.html' => ['class' => HomeController::class, 'method' => 'showHome'],
         'contact.html' => ['class' => HomeController::class, 'method' => 'showContact'],
-        'test.html' => ['class' => HomeController::class, 'method' => 'test'],
+        'sendMail.html' => ['class' => HomeController::class, 'method' => 'sendTheContactMail'],
 
         'loginPage.html' => ['class' => UserController::class, 'method' => 'login'],
         'logout' => ['class' => UserController::class, 'method' => 'logout'],
@@ -27,7 +26,6 @@ class Router
         'newPasswordPage.html' => ['class' => UserController::class, 'method' => 'newPassWord'],
         'registrer.html' => ['class' => UserController::class, 'method' => 'addUser'],
         'listOfUsers.html' => ['class' => UserController::class, 'method' => 'memberOfSiteWeb'],
-
 
         'blogPage.html' => ['class' => BlogController::class, 'method' => 'showBlog'],
         'detail_post.html' => ['class' => BlogController::class, 'method' => 'showDetailBlog'],
@@ -40,7 +38,6 @@ class Router
         'deleteComment' => ['class' => BlogController::class, 'method' => 'deleteComment'],
         'switchCommentStatus.html' => ['class' => BlogController::class, 'method' => 'switchStatusOfComment'],
         'switchAuthorOfPost.html' => ['class' => BlogController::class, 'method' => 'switchAuthorOfPost'],
-
 
         'showExperience.html' => ['class' => ExperienceController::class, 'method' => 'showDetailExperience'],
         'crudExperience.html' => ['class' => ExperienceController::class, 'method' => 'showDetailExperience'],
@@ -55,29 +52,27 @@ class Router
 
     /**
      * Router constructor.
-     * @param $request
-     * @param $role
+     * @param Request $request
      */
-    public function __construct($request)
+    public function __construct(Request $request)
     {
-
         $this->request = $request;
-
     }
 
 
     public function renderController()
     {
+        $action = $this->request->get('action', 'homePage.html');
         try {
-            if (key_exists($this->request, $this->route)) {
-                $classes = $this->route[$this->request]['class'];
-                $method = $this->route[$this->request]['method'];
-                $myCurrentController = new $classes;
-                $myCurrentController->$method();
-            } else {
+            if (!key_exists($action, $this->route)) {
                 throw new NotfoundPageException();
-
             }
+
+            $classes = $this->route[$action]['class'];
+            $method = $this->route[$action]['method'];
+            $myCurrentController = new $classes($this->request);
+            $myCurrentController->$method();
+
         } catch (ForbiddenAccessException $e) {
             self::redirectToErrorPage($e->getMessage());
         } catch (NeedAuthenticationException $e) {
@@ -87,11 +82,13 @@ class Router
         }
 
     }
-static function redirectToLoginPage(){
 
-    $View = new View('/frontViews/loginPage');
-    $View->renderView();
-}
+    static function redirectToLoginPage()
+    {
+
+        $View = new View('/frontViews/loginPage');
+        $View->renderView();
+    }
 
 
     static function redirectTo404Page($message = null)

@@ -10,9 +10,10 @@ class UserEntity
 {
     use HydratorTrait;
 
-    const STATUS_BANN = '3';
-    const STATUS_ADMIN = '1';
-    const STATUS_MEMBER = '2';
+    const STATUS_BANN = 3;
+    const STATUS_ADMIN = 1;
+    const STATUS_MEMBER = 2;
+
     private $id;
     private $username;
     private $name;

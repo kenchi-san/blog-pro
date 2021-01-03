@@ -53,7 +53,7 @@
 
                                 <h1><?= $experience->getTitle(); ?></h1>
                                 <br>
-                                <?= $experience->getDescription(); ?>
+                                <?= $this->clean($experience->getDescription()); ?>
                             </div>
                             <div class="row">
                                 <div class="offset-lg-4 col-lg-6 offset-lg-2 pt-lg-5">
@@ -70,6 +70,7 @@
 
 
     </section>
+
 
 
     <!-- Optional JavaScript -->

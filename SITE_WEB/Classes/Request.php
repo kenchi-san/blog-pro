@@ -4,27 +4,27 @@
 namespace App\Classes;
 
 
-use Cassandra\Varint;
-
 class Request
 {
-    public function clean($value): string
+
+    public function isPost()
     {
-        return htmlspecialchars(trim($value), ENT_DISALLOWED);
+        return $_SERVER['REQUEST_METHOD'] == 'POST';
     }
-    public function get(string $key)
+
+    public function get(string $key, $default = null)
     {
 
-        return isset($_GET[$key]) ? $this->clean($_GET[$key]) : null;
+        return isset($_GET[$key]) ? $_GET[$key] : $default;
     }
 
     public function file(string $key)
     {
-         return isset($_FILES['img'][$key]) ? $this->clean($_FILES['img'][$key]) : null;
+         return isset($_FILES['img'][$key]) ? $_FILES['img'][$key] : null;
 
     }
     public function post(string $key, $default = null)
     {
-       return isset($_POST[$key])? $this->clean($_POST[$key]) : $default;
+       return isset($_POST[$key])? $_POST[$key] : $default;
     }
 }

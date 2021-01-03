@@ -6,7 +6,6 @@ namespace App\Model;
 
 use App\Model\Entities\CommentEntity;
 use App\Model\Entities\CommentStatusEntity;
-use Model\Entities\PostEntity;
 use Model\Entities\UserEntity;
 use PDO;
 

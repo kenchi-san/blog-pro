@@ -13,9 +13,10 @@ class CommentEntity
 
     use HydratorTrait;
 
-    const STATUS_BANN = '3';
-    const STATUS_VALIDATED = '2';
-    const STATUS_WAIT = '1';
+    const STATUS_BANN = 3;
+    const STATUS_VALIDATED = 2;
+    const STATUS_WAIT = 1;
+
     private $id;
     private $content;
     private $created_at;

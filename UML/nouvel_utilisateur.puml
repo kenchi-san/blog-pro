@@ -1,0 +1,37 @@
+@startuml
+title Sequence : Nouvel utilisateur
+actor Utilisateur as U
+participant Application as A
+participant SGBD as bdd
+
+U->A : enregistrement(name,firstname,username,mail,password)
+activate A
+
+
+alt username or mail not exist
+    A->bdd : verifierExistance(username or mail)
+    activate bdd
+    bdd-->A : utilisateur n'exist pas
+
+alt mot de passe 1 et 2 ok
+   A->A: verification entre les deux mots de passes
+   A-->U: nouvel utilisateur enregistré
+   else
+   A-->U: message d'erreur pour le second mot de passe
+   end
+     else : username and mail not free
+    bdd-->A: username or mail exist
+   deactivate bdd
+    A-->U: error message
+   deactivate A
+'    else invalid password
+'        A->U: invalidPassword
+'    end
+'else invalid login
+'    bdd->A : null
+'deactivate bdd
+'    A->U: invalidLogin
+'    deactivate A
+end
+
+@enduml

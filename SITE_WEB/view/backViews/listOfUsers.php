@@ -41,10 +41,9 @@
 
                 <form method="POST" action="listOfUsers.html?id=<?= $user->getId();?>">
                     <select name="StatusId">
-                        <option value="<?php \Model\Entities\UserEntity::STATUS_ADMIN ?>"<?= $user->getUserStatusId() === \Model\Entities\UserEntity::STATUS_ADMIN ? "selected" : "" ?>>Administrateur
-                        </option>
-                        <option value="<?php \Model\Entities\UserEntity::STATUS_MEMBER ?>"<?= $user->getUserStatusId() === \Model\Entities\UserEntity::STATUS_MEMBER ? "selected" : "" ?>>Membre</option>
-                        <option value='<?php \Model\Entities\UserEntity::STATUS_BANN ?>'<?= $user->getUserStatusId() === \Model\Entities\UserEntity::STATUS_BANN ? "selected" : "" ?>>Banni</option>
+                        <option value="<?= \Model\Entities\UserEntity::STATUS_ADMIN ?>"<?= ($user->getUserStatusId() == \Model\Entities\UserEntity::STATUS_ADMIN) ? "selected" : "" ?>>Administrateur</option>
+                        <option value="<?= \Model\Entities\UserEntity::STATUS_MEMBER ?>"<?= ($user->getUserStatusId() == \Model\Entities\UserEntity::STATUS_MEMBER) ? "selected" : "" ?>>Membre</option>
+                        <option value='<?= \Model\Entities\UserEntity::STATUS_BANN ?>'<?= ($user->getUserStatusId() == \Model\Entities\UserEntity::STATUS_BANN) ? "selected" : "" ?>>Banni</option>
                     </select>
                     <input type="submit" value="Changer">
                 </form>

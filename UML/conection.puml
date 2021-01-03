@@ -1,0 +1,26 @@
+@startuml
+title Sequence : Se connecter
+actor Utilisateur as U
+participant Application as A
+participant SGBD as bdd
+
+U->A : seConnecter(login,mdp)
+activate A
+A->bdd : verifierExistance(login)
+activate bdd
+alt login exist
+    bdd->A : user
+    A->A : checkPassword(user,mdp)
+    alt valid password
+        A->U: ok
+    else invalid password
+        A->U: invalidPassword
+    end
+else invalid login
+    bdd->A : null
+deactivate bdd
+    A->U: invalidLogin
+    deactivate A
+end
+
+@enduml

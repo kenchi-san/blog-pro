@@ -9,7 +9,7 @@
                 ?></small>
         </div>
         <div class="col-ms-12 col-md-12 col-lg-12">
-            <?php echo $comment->getContent(); ?>
+            <?php echo $this->clean($comment->getContent()); ?>
         </div>
     </div>
 </div>

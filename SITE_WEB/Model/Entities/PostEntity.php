@@ -22,7 +22,7 @@ class PostEntity
 
     public function __construct()
 {
-    $this->setUpdatedAt(date('Y-m-d H:i:s'));
+    $this->setUpdatedAt(date('d/m/Y'));
 }
 
     /**
