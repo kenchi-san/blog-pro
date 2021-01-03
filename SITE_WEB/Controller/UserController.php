@@ -4,6 +4,7 @@
 namespace App\Controller;
 
 
+use App\Classes\CheckInformationsAddUser;
 use App\Classes\Mailer\Mailing;
 use App\Classes\PasswordGenerator;
 use App\Classes\PasswordValidator;
@@ -18,6 +19,7 @@ class UserController extends AbstractController
 {
     public function login()
     {
+
         $loginView = new View('/frontViews/loginPage');
 
         if ($this->request->post('login') != null && $this->request->post('password') != null) {
@@ -34,18 +36,22 @@ class UserController extends AbstractController
             if (empty($password)) {
                 $errors[] = 'Mot de passe non renseigné';
             }
+            if (!filter_var($login, FILTER_VALIDATE_REGEXP, ["options" => array("regexp" => "#^[a-zA-Z0-9]{3,12}$#")])) {
+                $errors[] = 'Vous devez mettre votre nom d\'utilisateur';
+            }
             if (count($errors)) {
-                $loginView->renderView(['errors' => $errors]);
+                return $loginView->renderView(['errors' => $errors]);
             }
 
             $user = $userManager->findUserFormCredentials($login, $password);
+//
             if ($user) {
                 $this->session->bannMembers($user);
 
                 $session->authenticateUser($user);
                 $user = $session->isUserAuthenticated();
+                switch ($user->getUserStatusId()) {
 
-                switch ($user->getUserStatusId()){
                     case UserEntity::STATUS_ADMIN:
                         $url = 'backOffice.html';
                         break;
@@ -70,9 +76,9 @@ class UserController extends AbstractController
     {
         $newPassView = new View('/frontViews/forgetPasswordPage');
 
-
         $errors = [];
-        $subject = '';
+        $subject = 'Mail de réinitialisation de votre mot de passe';
+
         if ($_POST != null) {
             $userManager = new UserManager();
             $tokenGenerator = new TokenGenerator();
@@ -111,103 +117,92 @@ class UserController extends AbstractController
      * take the request from the link's send by users
      * check if the token exist and setup the new password in the SGBD
      *
+     * @throws NotfoundPageException
      */
     public function newPassWord()
     {
 
+        $password_1 = $this->request->post('password_1');
+        $password_2 = $this->request->post('password_2');
+
         $userManager = new UserManager();
-        $passwordValidator = new PasswordValidator();
         $passwordGenerator = new  PasswordGenerator();
+        $passwordValidator = new PasswordValidator();
         $view = new View('/frontViews/updatePasswordPage');
 
         $slug = $this->request->get('token') ?? null;
 
         $user = $userManager->findUserFormToken($slug);
+
         $this->session->bannMembers($user);
-        $passwordValidator->passwordFormToken($user);
+        if (!empty($password_1) && !empty($password_2)) {
+            $password_ok = $passwordValidator->passwordFormToken($user, $password_1, $password_2);
 
-        $password_1 = $this->request->post('password_1');
-        $password_2 = $this->request->post('password_2');
+            $password = $passwordGenerator->newPassWord($password_ok);
 
-        if ($_POST && $password_1 === $password_2) {
-            $password = $passwordGenerator->newPassWord($password_1);
-            $userManager->setupNewPasswordInBdd($user['username'], $password);
-            $userManager->destroyTokenFromSgbd($user['username']);
-            $this->redirectTo('homePage.html');
-        } else {
-
-            $view->renderView();
-
+            $nvPassword = $userManager->setupNewPasswordInBdd($user['username'], $password);
+            if ($nvPassword == true) {
+                $modification = $userManager->destroyTokenFromSgbd($user['username']);
+            }
+            if ($modification == true) {
+                return $this->redirectTo('loginPage.html');
+            }
         }
+
+
+        $view->renderView();
+
 
     }
 
     public function addUser()
     {
-        /**TODO faire message flash pour signaler que l'utilisateur est bien enregistré***/
-
+        /**TODO a retrailler**/
         $registerView = new View('/frontViews/registerPage');
 
         $userManager = new UserManager();
         $passwordGenerator = new PasswordGenerator();
+        $checkInformation = new CheckInformationsAddUser();
         $errors = [];
+        if($this->request->isPost()){
 
-        $password = $this->request->post('password');
-        $password2 = $this->request->post('password2');
-        if ($_POST && $password === $password2) {
-
+            $password = $this->request->post('password');
+            $password2 = $this->request->post('password2');
 
             $username = $this->request->post('username');
-            $name = $this->request->post('name');
             $firstname = $this->request->post('firstname');
             $name = $this->request->post('name');
             $mail = $this->request->post('email');
-            /** faire une vérif si username ou mail existe déja**/
-            $resultCheck = $userManager->checkUserToTheBdd($username, $mail);
 
-            if ($resultCheck === true) {
-                // Verification nom
-                if (!filter_var($name, FILTER_VALIDATE_REGEXP, ["options" => array("regexp" => "#^[a-zA-Z]{3,10}$#")])) {
-                    $errors[] = 'Le name n\'est pas valide';
-                }
-
-                if (!filter_var($username, FILTER_VALIDATE_REGEXP, ["options" => array("regexp" => "#^[a-zA-Z0-9]{3,12}$#")])) {
-                    $errors[] = 'Le mail n\'est pas valide';
-                }
-                if (!filter_var($firstname, FILTER_VALIDATE_REGEXP, ["options" => array("regexp" => "#^[a-zA-Z]{3,10}$#")])) {
-                    $errors[] = 'Le prénom n\'est pas valide';
-                }
-                if (!filter_var($mail, FILTER_VALIDATE_EMAIL)) {
-                    $errors[] = 'Le mail n\'est pas valide';
-                }
-
+            if ($userManager->isCredentialsAvailable($username, $mail)) {
+                $errors = $checkInformation->checkInformations($name, $username, $firstname, $mail, $password, $password2);
                 if (count($errors) === 0) {
-
-
                     $nvpassword = $passwordGenerator->newPassWord($password);
                     $password = $nvpassword;
                     $userManager->newUser($username, $name, $firstname, $mail, $password);
-                    $this->redirectTo('homePage.html');
+                    return $this->redirectTo('homePage.html');
                 }
-
             } else {
-                $errors[] = 'Le mail ou le username est déjà prit';
-
+                $errors[] = "le nom d\'utilisateur ou le mail est déjà pris";
             }
-            $registerView->renderView(array('errors' => $errors));
         }
-        $registerView->renderView();
+
+        return  $registerView->renderView(['errors' => $errors]);
+
     }
 
 
-    public function memberOfSiteWeb()
+    public
+    function memberOfSiteWeb()
     {
         $this->session->checkAdminAutorisation();
         $view = new View('/backViews/listOfUsers');
         $userManager = new UserManager();
         $listUsers = $userManager->findAllUser();
 
-        if ($this->request->post('StatusId')) {
+        if (!empty($this->request->post('StatusId'))) {
+
+
             if (empty($this->request->get('id'))) {
                 throw new NotfoundPageException();
             } else {
@@ -223,7 +218,8 @@ class UserController extends AbstractController
     }
 
 
-    public function logout()
+    public
+    function logout()
     {
         session_destroy();
         $this->redirectTo('homePage.html');

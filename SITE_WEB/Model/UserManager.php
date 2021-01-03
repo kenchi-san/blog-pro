@@ -4,6 +4,7 @@
 namespace Model;
 
 
+use App\Exception\NotfoundPageException;
 use App\Model\HydratorTrait;
 use App\Model\Manager;
 use Model\Entities\UserEntity;
@@ -51,8 +52,9 @@ class UserManager extends Manager
     /**
      * @param string $slug
      * @return string
+     * @throws NotfoundPageException
      */
-    public function findUserFormToken(?string $slug)
+    public function findUserFormToken(string $slug)
     {
         if ($slug) {
             $query = "SELECT * FROM user WHERE token = :slug ";
@@ -63,7 +65,7 @@ class UserManager extends Manager
             return ($result);
 
         }
-        return false;
+        throw new NotfoundPageException();
     }
 
 
@@ -82,50 +84,35 @@ WHERE username = :username ";
         $result = $req->fetch(PDO::FETCH_ASSOC);
         $req->closeCursor();
 
-
-        if ($result['username'] === $login) {
-            if (password_verify($password, $result['password'])) {
-
-                return $result;
-            }
+        if (password_verify($password, $result['password'])) {
+            return $result;
         }
-        return false;
+
     }
 
-    public function checkUserToTheBdd($username, $email)
+    public function isCredentialsAvailable($username, $email)
     {
-        if ($username || $email) {
+        $query = "SELECT u.id as userId, u.name,u.username,u.firstname,u.email,u.create_time FROM user u WHERE username = :username OR email = :email";
+        $req = $this->bdd->prepare($query);
+        $req->execute(array('username' => $username, 'email' => $email));
+        $existingUser = $req->fetch(PDO::FETCH_ASSOC);
+        $req->closeCursor();
 
-            $query = "SELECT u.id as userId, u.name,u.username,u.firstname,u.email,u.create_time FROM user u WHERE username = :username OR email = :email";
-            $req = $this->bdd->prepare($query);
-            $req->execute(array('username' => $username, 'email' => $email));
-            $result = $req->fetch(PDO::FETCH_ASSOC);
-            $req->closeCursor();
-            if ($username === $result['username']) {
-
-                return false;
-            }
-            if ($email === $result['email']) {
-
-                return false;
-            }
-            return true;
-        }
-        return true;
+        return ($existingUser) ? false : true;
     }
 
     public function setupNewPasswordInBdd($login, $password)
     {
-        if ($password) {
-            $req = $this->bdd->prepare('UPDATE user SET password = :nvpwd WHERE username = :login');
 
-            $result = $req->execute([
-                'nvpwd' => $password,
-                'login' => $login
-            ]);
-            return $result;
-        }
-        return false;
+        $req = $this->bdd->prepare('UPDATE user SET password = :nvpwd WHERE username = :login');
+
+        $result = $req->execute([
+            'nvpwd' => $password,
+            'login' => $login
+        ]);
+
+        return $result;
+
     }
 
     public function destroyTokenFromSgbd($login)
@@ -133,13 +120,14 @@ WHERE username = :username ";
         $req = $this->bdd->prepare('UPDATE user SET token = :nvtoken WHERE username = :login');
 
         $result = $req->execute([
-            'nvtoken' => NULL,
+            'nvtoken' => NUll,
             'login' => $login
         ]);
         return $result;
     }
 
-    public function newUser($username, $name, $firstname, $mail, $password)
+    public
+    function newUser($username, $name, $firstname, $mail, $password)
     {
 
         $req = $this->bdd->prepare("INSERT INTO user (username, name, firstname, email, password) VALUES (:username, :name, :firstname, :email, :password)");
@@ -153,7 +141,8 @@ WHERE username = :username ";
 
     }
 
-    public function findAllUser()
+    public
+    function findAllUser()
     {
         $query = "SELECT * FROM user";
         $req = $this->bdd->prepare($query);
@@ -171,7 +160,8 @@ WHERE username = :username ";
         return $users;
     }
 
-    public function updateTheStatusOfUser($userId, $user_status_id)
+    public
+    function updateTheStatusOfUser($userId, $user_status_id)
     {
         $req = $this->bdd->prepare('UPDATE user SET user_status_id=:nvuser_status_id WHERE id=:id');
         return $req->execute([
