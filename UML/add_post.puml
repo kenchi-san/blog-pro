@@ -1,0 +1,30 @@
+@startuml
+
+title Sequence : Ajouter un post
+
+actor Administrateur as Ad
+participant Controller as C
+participant Model as M
+
+participant SGBD as bdd
+ref over Ad,C,M,bdd : Se connecter
+Ad->C:nouveau post
+activate C
+C->M: Traitement des données
+deactivate C
+activate M
+M->bdd: Exécution de la requete
+activate bdd
+bdd-->M:Réponse
+deactivate bdd
+M-->C:Ajout ok
+deactivate M
+activate C
+C-->Ad: redirection back_office
+deactivate C
+
+
+
+
+
+@enduml
