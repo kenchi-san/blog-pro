@@ -17,19 +17,29 @@ class BackController extends AbstractController
     {
         $this->session->checkAdminAutorisation();
         $experienceManager = new ExperienceManager();
-        $postManager = new PostManager();
-        $commentManager = new  CommentManager();
-
 
         $experiences = $experienceManager->findAllExperiences();
-        $posts =$postManager->findAll();
-        $comments = $commentManager->findAllComments();
-
 
         $dashboardView = new View('/backViews/dashBoard');
-        $dashboardView->renderView(["experiences" => $experiences, "posts" => $posts, 'comments' => $comments]);
+        $dashboardView->renderView(["experiences" => $experiences]);
 
 
     }
+    public function showCommentsList(){
+        $this->session->checkAdminAutorisation();
+        $commentManager = new  CommentManager();
+        $comments = $commentManager->findAllComments();
 
+        $dashboardView = new View('/backViews/listOfComments');
+        $dashboardView->renderView(['comments' => $comments]);
+
+    }
+
+    public function showPostsList(){
+        $this->session->checkAdminAutorisation();
+        $postManager = new PostManager();
+        $posts =$postManager->findAll();
+        $dashboardView = new View('/backViews/listOfPosts');
+        $dashboardView->renderView([ "posts" => $posts]);
+    }
 }

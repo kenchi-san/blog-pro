@@ -67,7 +67,7 @@ class HomeController extends AbstractController
     {
         $mail = new Mailing();
         $mailView = new View('/mail/contact');
-        $contentMail=$mailView->renderView(['name' => $name, 'mail'=>$email,'phone' => $phone, 'message' => $message]);
+        $contentMail=$mailView->getView(['name' => $name, 'mail'=>$email,'phone' => $phone, 'message' => $message]);
         $mail->sendTheMailFromContactForm($contentMail);
     }
 

@@ -104,6 +104,8 @@ class CommentManager extends Manager
         $result = $req->execute(['id' => $id]);
         return $result;
     }
+
+
     public function findById(int $commentId)
     {
         $query = "SELECT c.id as comment_id,c.content,c.created_at,c.user_id,u.id,u.username,u.firstname FROM comment c 
@@ -124,6 +126,17 @@ class CommentManager extends Manager
             $comment->setUser($user);
             return $comment;
         }
+    }
+
+    public function editTheCommentByAdmin($commentId,$content)
+    {
+        $req = $this->bdd->prepare('UPDATE comment SET content  =:nvcontent WHERE id=:commentId');
+        $result = $req->execute([
+            'commentId' => $commentId,
+            'nvcontent' => $content
+
+        ]);
+        return $result;
     }
 
 }

@@ -8,16 +8,16 @@ participant Model as M
 
 participant SGBD as bdd
 ref over Ad,C,M,bdd : Se connecter
-Ad->C:changement Auteur
+Ad->C:changerAuteurPost(idPost, idAuteur)
 activate C
-C->M: Traitement des données
+C->M: changerAuteur(idPost, IdAuteur)
 deactivate C
 activate M
 M->bdd: Exécution de la requete
 activate bdd
 bdd-->M:Réponse
 deactivate bdd
-M-->C:nouvel auteur
+M-->C:Post mis à jour
 deactivate M
 activate C
 C-->Ad: redirection back_office

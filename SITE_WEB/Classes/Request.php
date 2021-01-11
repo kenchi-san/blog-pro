@@ -11,6 +11,10 @@ class Request
     {
         return $_SERVER['REQUEST_METHOD'] == 'POST';
     }
+    public function isGet(){
+        return $_SERVER['REQUEST_METHOD'] == 'GET';
+
+    }
 
     public function get(string $key, $default = null)
     {

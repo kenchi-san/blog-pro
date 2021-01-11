@@ -79,7 +79,7 @@ class UserController extends AbstractController
         $errors = [];
         $subject = 'Mail de réinitialisation de votre mot de passe';
 
-        if ($_POST != null) {
+        if ($this->request->isPost() != null) {
             $userManager = new UserManager();
             $tokenGenerator = new TokenGenerator();
             $mailing = new Mailing();
@@ -128,30 +128,39 @@ class UserController extends AbstractController
         $userManager = new UserManager();
         $passwordGenerator = new  PasswordGenerator();
         $passwordValidator = new PasswordValidator();
+
         $view = new View('/frontViews/updatePasswordPage');
 
         $slug = $this->request->get('token') ?? null;
 
         $user = $userManager->findUserFormToken($slug);
 
+        if ($user == false) {
+            return $view->renderView(['invalidToken' => true]);
+        }
         $this->session->bannMembers($user);
-        if (!empty($password_1) && !empty($password_2)) {
-            $password_ok = $passwordValidator->passwordFormToken($user, $password_1, $password_2);
+        if ($this->request->isPost()) {
+            $password_errors = $passwordValidator->passwordFormToken($user, $password_1, $password_2);
+            if (gettype($password_errors) == 'array') {
+                return $view->renderView($password_errors);
+}
+            if ($password_1 === $password_2) {
+                $password = $passwordGenerator->newPassWord($password_1);
 
-            $password = $passwordGenerator->newPassWord($password_ok);
+                $nvPassword = $userManager->setupNewPasswordInBdd($user['username'], $password);
 
-            $nvPassword = $userManager->setupNewPasswordInBdd($user['username'], $password);
-            if ($nvPassword == true) {
-                $modification = $userManager->destroyTokenFromSgbd($user['username']);
-            }
-            if ($modification == true) {
-                return $this->redirectTo('loginPage.html');
+                if ($nvPassword == true) {
+                    $modification = $userManager->destroyTokenFromSgbd($user['username']);
+
+                }
+                if ($modification == true) {
+
+                    return $this->redirectTo('loginPage.html');
+                }
             }
         }
 
-
         $view->renderView();
-
 
     }
 
@@ -164,7 +173,7 @@ class UserController extends AbstractController
         $passwordGenerator = new PasswordGenerator();
         $checkInformation = new CheckInformationsAddUser();
         $errors = [];
-        if($this->request->isPost()){
+        if ($this->request->isPost()) {
 
             $password = $this->request->post('password');
             $password2 = $this->request->post('password2');
@@ -187,7 +196,7 @@ class UserController extends AbstractController
             }
         }
 
-        return  $registerView->renderView(['errors' => $errors]);
+        return $registerView->renderView(['errors' => $errors]);
 
     }
 

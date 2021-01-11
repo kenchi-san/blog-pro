@@ -78,7 +78,7 @@ class Session
     public function bannMembers($checkUser = null)
     {
         if ((int)$checkUser['user_status_id'] === UserEntity::STATUS_BANN) {
-            throw new ForbiddenAccessException("Vous avez été banni du Site par l'administrateur");
+          throw new ForbiddenAccessException("Vous avez été banni du Site par l'administrateur");
         }
     }
 

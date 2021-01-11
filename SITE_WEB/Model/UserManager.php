@@ -120,7 +120,7 @@ WHERE username = :username ";
         $req = $this->bdd->prepare('UPDATE user SET token = :nvtoken WHERE username = :login');
 
         $result = $req->execute([
-            'nvtoken' => NUll,
+            'nvtoken' => null,
             'login' => $login
         ]);
         return $result;

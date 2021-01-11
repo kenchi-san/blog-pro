@@ -1,15 +1,24 @@
 <?php if (isset($invalidToken) && $invalidToken === true): ?>
+    <div class="alert alert-danger" role="alert" style="margin-left: 30%;
+    margin-right: 30%;text-align: center; margin-top: 2%">
+        <p>Le lien pour réinitialiser votre mot de passe n'est pas correcte</p>
+    </div>
 
-    <p>Le lien pour réinitialiser votre mot de passe n'est pas correcte</p>
 
 <?php else: ?>
 
     <?php if (isset($invalidePassword) && $invalidePassword === true): ?>
-        <p>le deuxième mot de passe n'est identique. </p>
+        <div class="alert alert-danger" role="alert" style="margin-left: 30%;
+    margin-right: 30%;text-align: center; margin-top: 2%">
+            <p>le deuxième mot de passe n'est identique. </p>  </div>
+
     <?php endif; ?>
 
     <?php if ($_POST && isset($invalidePassword2) && $invalidePassword2 === true): ?>
-        <p>Le champ est vide </p>
+        <div class="alert alert-danger" role="alert" style="margin-left: 30%;
+    margin-right: 30%;text-align: center; margin-top: 2%">
+            <p>Le champ est vide </p>  </div>
+
     <?php endif; ?>
 
     <div class="container">

@@ -14,7 +14,7 @@ class Mailing
     {
         $headers[] = 'MIME-Version: 1.0';
         $headers[] = 'Content-type: text/html; charset=UTF-8';
-        mail($to, $subject, 'Voici votre<a href="' . HOST . 'newPasswordPage.html?token=' . $token . '">lien pour réinitialiser votre mot de passe</a>', implode("\r\n", $headers));
+        mail($to, $subject, 'Voici votre <a href="' . HOST . 'newPasswordPage.html?token=' . $token . '">lien pour réinitialiser votre mot de passe</a>', implode("\r\n", $headers));
     }
 
     public function sendTheMailFromContactForm($contentMail)

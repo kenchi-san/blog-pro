@@ -11,28 +11,27 @@
 
     <div class="row block-blog">
 
-            <h2 class="text-center">
+        <h2 class="text-center">
 
-                <?= $post->getTitle(); ?>
-            </h2>
-            <p>
-                <?= $post->getResume(); ?>
-            </p>
-
-
-            <p>
-                <?= $post->getContent() ?>
-            </p>
-            <div class="row pl-5 pb-2">
-                créé le <?php   $date = $post->getcreatedAt();
-                $dt = DateTime::createFromFormat('Y-m-d H:i:s', $date);
-                echo $dt->format('d/m/Y');
-                ?>
+            <?= $post->getTitle(); ?>
+        </h2>
+        <p>
+            <?= $post->getResume(); ?>
+        </p>
 
 
+        <p>
+            <?= $post->getContent() ?>
+        </p>
+        <div class="row pl-5 pb-2">
+            créé le <?php $date = $post->getcreatedAt();
+            $dt = DateTime::createFromFormat('Y-m-d H:i:s', $date);
+            echo $dt->format('d/m/Y');
+            ?>
 
-                par <?php echo $post->getUser()->getUsername() ?>
-            </div>
+
+            par <?php echo $post->getUser()->getUsername() ?>
+        </div>
 
 
     </div>
@@ -50,7 +49,7 @@
                             ?></small>
                     </div>
                     <div class="col-ms-12 col-md-12 col-lg-12">
-                        <?php echo $this->clean($comment->getContent());?>
+                        <?php echo $this->clean($comment->getContent()); ?>
                     </div>
                 </div>
             <?php }
@@ -70,13 +69,14 @@
 
     <?php if ($session->isUserAuthenticated()) { ?>
         <div class="container">
-        <form method="post">
+        <form method="post" action="<?= "addComment.html?postId=".$post->getId()?>">
             <div class="row">
 
                 <div class="col-sm-8 offset-sm-1">
-                <label for="comment" class="sr-only">Votre commentaire:</label>
-                    <textarea name="content" id="comment" placeholder="Votre commentaire" style="width: 100%; height: 6rem;">
-                </textarea>
+                    <label for="comment" class="sr-only">Votre commentaire:</label>
+                    <textarea name="content" id="comment"
+                              placeholder="Votre commentaire" style="width: 100%; height: 6rem;"><?php
+                    ?></textarea>
                 </div>
             </div>
             <div class="col-sm-8 offset-sm-1">

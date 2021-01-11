@@ -1,6 +1,5 @@
 <?php
 
-
 namespace App\Controller;
 
 
@@ -26,21 +25,20 @@ class BlogController extends AbstractController
 
     public function showDetailBlog()
     {
+        $postManager = new PostManager();
+        $commentManager = new CommentManager();
 
-        if (!empty($this->request->get('postId'))) {
-            $postManager = new PostManager();
-            $commentManager = new CommentManager();
-            $postId = $this->request->get('postId');
-            $post = $postManager->findById($postId);
-            $comments = $commentManager->findIdCommentFromOnePost($postId);
-            $detailView = new View('/frontViews/postsDetails');
-            $detailView->renderView(['post' => $post, 'comments' => $comments]);
-            $this->addComment($this->request->post('content'), $postId);
-
-        } else {
+        $postId = $this->request->get('postId');
+        if (!$postId) {
+            throw new NotfoundPageException();
+        }
+        if (!$post = $postManager->findById($postId)) {
             throw new NotfoundPageException();
         }
 
+        $comments = $commentManager->findIdCommentFromOnePost($postId);
+        $detailView = new View('/frontViews/postsDetails');
+        $detailView->renderView(['post' => $post, 'comments' => $comments]);
 
     }
 
@@ -98,13 +96,13 @@ class BlogController extends AbstractController
 
         if (!empty($this->request->post('title') && $this->request->post('resume') && $this->request->post('content'))) {
             $postManager->updatePost(
-               $postId,
+                $postId,
                 $this->request->post('title'),
                 $this->request->post('resume', 'Mon résumé'),
                 $this->request->post('content'),
                 $this->request->post('authorId'));
 
-            $this->redirectTo('editPost.html?postId='.$postId);
+            $this->redirectTo('editPost.html?postId=' . $postId);
         }
 
         $postView = new View('/backViews/editPost');
@@ -127,23 +125,57 @@ class BlogController extends AbstractController
         $view->renderView(['comment' => $comment]);
     }
 
-    public function addComment($content, $postId)
+    public function addComment()
     {
+        $user = $this->session->checkAuth();
+        $postManager = new PostManager();
+        $commentManager = new CommentManager();
+        $postId = $this->request->get('postId');
+if ($this->request->get('commentId')){
+    $commentManager->editTheCommentByAdmin($this->request->get('commentId'),$this->request->post('content'));
+    $this->redirectTo('detail_comment.html?commentId='.$this->request->get('commentId'));
+}
 
-        if ($this->request->post('content') && $this->request->get('postId')) {
-
-            $user = $this->session->checkAuth();
-            $commentManager = new CommentManager();
-           $userId = $user->getId();
-            $commentManager->addCommentFromOnePostId($userId, $this->request->get('postId'), $this->request->post('content'));
-
-
-        }else{
+        if (!$postId && !$this->request->isPost()) {
             throw new NotfoundPageException();
         }
+        if (!$post = $postManager->findById($postId)) {
+            throw new NotfoundPageException();
+        }
+
+        $commentManager->addCommentFromOnePostId($user->getId(), $postId, $this->request->post('content'));
+        return $this->redirectTo("detail_post.html?postId=" . $this->request->get('postId'));
+
+
     }
 
+    public function editComment(){
 
+        $this->session->checkAdminAutorisation();
+$view = new View('/backViews/editComment');
+        $commentId = $this->request->get('commentId');
+        if ($commentId === null) {
+            throw new NotfoundPageException();
+        }
+        $commentManager = new CommentManager();
+        $comment = $commentManager->findById($commentId);
+        if ($comment === null) {
+            throw new NotfoundPageException();
+        }
+        $view->renderView(['comment'=>$comment]);
+    }
+
+    public function deleteComment()
+    {
+
+        $this->session->checkAdminAutorisation();
+        $commentManager = new CommentManager();
+        if (!empty($this->request->get('commentId'))) {
+            $commentId = $this->request->get('commentId');
+            $commentManager->deleteComment($commentId);
+            $this->redirectTo('backOffice.html');
+        }
+    }
     public function switchStatusOfComment()
     {
 
@@ -160,16 +192,6 @@ class BlogController extends AbstractController
         }
     }
 
-    public function deleteComment()
-    {
 
-        $this->session->checkAdminAutorisation();
-        $commentManager = new CommentManager();
-        if (!empty($this->request->get('commentId'))) {
-            $commentId = $this->request->get('commentId');
-            $commentManager->deleteComment($commentId);
-            $this->redirectTo('backOffice.html');
-        }
-    }
 
 }

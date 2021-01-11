@@ -36,14 +36,21 @@ class View
                 include_once(VIEW . self::BACK_GARARIT);
                 break;
             case "mail":
-                return $contentPage;
+                echo $contentPage;
                 break;
             default:
                 throw  new \LogicException();
         }
-
         return true;
 
+    }
+
+    public function getView($params = []){
+        ob_start();
+        $this->renderView($params);
+
+        $view =  ob_get_clean();
+        return $view;
     }
 
 }

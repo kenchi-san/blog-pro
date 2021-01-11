@@ -80,8 +80,10 @@
 <div class="container-fluid">
     <div class="row">
         <div class="nav flex-column col-md-2 pl-3 pt-3">
-            <a href="<?= HOST . 'backOffice.html' ?>">Retour au dashboard</a>
+            <a href="<?= HOST . 'backOffice.html' ?>">Gestion des Projets</a>
             <a href="<?= HOST . 'listOfUsers.html'?>">Gestion des membres enregistrés</a>
+            <a href="<?= HOST. 'listOfComments.html'?>">Gestion des Commentaires</a>
+            <a href="<?= HOST. 'listOfPosts.html'?>">Gestion des Posts</a>
         </div>
         <div class="offset-md-2 col-md-6">
             <div class="row">

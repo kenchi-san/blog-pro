@@ -46,7 +46,8 @@ class Router
         'editExperience.html' => ['class' => ExperienceController::class, 'method' => 'editDetailExperience'],
 
         'backOffice.html' => ['class' => BackController::class, 'method' => 'dashboardAdmin'],
-
+        'listOfComments.html' => ['class' => BackController::class, 'method' => 'showCommentsList'],
+        'listOfPosts.html' => ['class' => BackController::class, 'method' => 'showPostsList']
 
     ];
 
