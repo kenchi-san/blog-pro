@@ -10,7 +10,7 @@
     <?php if (isset($invalidePassword) && $invalidePassword === true): ?>
         <div class="alert alert-danger" role="alert" style="margin-left: 30%;
     margin-right: 30%;text-align: center; margin-top: 2%">
-            <p>le deuxième mot de passe n'est identique. </p>  </div>
+            <p>le deuxième mot de passe n'est pas identique. </p>  </div>
 
     <?php endif; ?>
 
@@ -24,11 +24,11 @@
     <div class="container">
         <div class="mt-4 mb-4">
             <form method="post">
-                <label for="password"></label><input type="text" id="password" class="fadeIn second form-control" name="password_1"
+                <label for="password"></label><input type="password" id="password" class="fadeIn second form-control" name="password_1"
                                                      placeholder="nouveau mot de passe">
                 <div class="valid-feedback">Ok !</div>
                 <div class="invalid-feedback">Valeur incorrecte</div>
-                <input type="text" id="password" class="fadeIn third " name="password_2"
+                <input type="password" id="password" class="fadeIn third " name="password_2"
                        placeholder="Confirmez votre mot de passe">
 
                 <input type="submit" class="fadeIn fourth" value="Valider">
